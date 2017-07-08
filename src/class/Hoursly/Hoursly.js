@@ -57,7 +57,6 @@ this.dailyTemp=echarts.init(document.querySelector('.daily-temp'),{padding:20});
         //   backgroundColor:'#6fadbd',
     title: {
         text: '未来24小时气温变化(℃)',
-        // subtext: '间隔3小时',
     },
     tooltip: {
         trigger: 'axis'
