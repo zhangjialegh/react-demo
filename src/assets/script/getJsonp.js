@@ -17,7 +17,8 @@ function getJsonp(city,timeout) {
     }
   })
 if(cityId==='') {alert('输入的城市名有误，或者未查到该城市天气信息，请重新输入！');return;}
-let  url=`http://aider.meizu.com/app/weather/listWeather?cityIds=${cityId}`;
+let url=`https://weatherapi.market.xiaomi.com/wtr-v3/weather/all?latitude=110&longitude=112&locationKey=weathercn%3A${cityId}&days=7&appKey=weather20151024&sign=zUFJoAR2ZVrDy1vF3D07&isGlobal=false&locale=zh_cn`;
+// let  url=`http://aider.meizu.com/app/weather/listWeather?cityIds=${cityId}`;
             // url+='?';
             // for (var key in data) {
             //     url+=`${key}=${data[key]}&`;

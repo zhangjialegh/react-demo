@@ -14,7 +14,7 @@ class Body extends React.Component{
                <Breadcrumb.Item>Bill</Breadcrumb.Item>
                </Breadcrumb>
                {/*<Main/>*/}
-               {/*<Forecast/>*/}
+               {/* <Forecast/> */}
                <Hoursly />
              </Content>
         );

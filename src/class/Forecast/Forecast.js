@@ -4,7 +4,8 @@ import './Forecast.css';
 import echarts from 'echarts';
 import  {optionAir,optionTemp} from './echarts';
 import getJsonp from '../../assets/script/getJsonp';
-
+import windSwitch from '../../assets/script/windSwitch';
+import weatherCode from '../../assets/script/weatherCode';
 const Search = Input.Search;
 
 class Forecast extends React.Component{
@@ -13,7 +14,7 @@ class Forecast extends React.Component{
    this.state={
        cityInfo:'',
        city:'',
-       weathers:'',
+       forecastDaily:'',
    }
    
    this.set=this.set.bind(this);
@@ -23,19 +24,20 @@ class Forecast extends React.Component{
 
 componentDidMount(){
 
-  let {city,weathers}=this.state;
-  if(city!=='')  return;
+  let {city,forecastDaily}=this.state;
+  // if(city!=='')  return;
   let _this=this;
   getJsonp('北京').then(function(data) {
     console.log(data);
-                            let {city,weathers}=data.value[0];
-                            _this.set(city,weathers);
+                            let {forecastDaily}=data;
+                            
+                            _this.set(city='北京',forecastDaily);
                             });
 }
 
 
-set(city,weathers){
-this.setState({cityInfo:'',city,weathers})
+set(city,forecastDaily){
+this.setState({cityInfo:'',city,forecastDaily})
 }
 textChange(e){
   this.setState({
@@ -47,21 +49,51 @@ handleChange(value) {
   value=value.trim().toLowerCase();
   console.log(`selected ${value}`);
   getJsonp(value).then(function(data) {
-                            let {city,weathers}=data.value[0];
-                            _this.set(city,weathers);
+                            let {forecastDaily}=data;
+                            _this.set(value,forecastDaily);
                           });
   //  this.setState({city:''})                         
 }
   render(){
     let {set,handleChange,textChange}=this;
-    let {cityInfo,city,weathers}=this.state;
+    let {cityInfo,city,forecastDaily}=this.state;
+    
     // let cards,code,txt,time=new Date().getHours();
-    let cards;
+    let cards,timeNow=new Date().getHours(),weatherV,windd,winds,weatherI,forecastDate;
     if(city!==''){
+      console.log(city);
+      city=city==='undefined'?'北京':city;
       // console.log(basic,daily_forecast);
-       cards=weathers.slice(0,6).map((item,i) => {
-        let {date,img,wd,weather,week,ws,temp_day_c,temp_night_c,sun_down_time,sun_rise_time}=item;
-        wd=wd===''?'微风':wd;
+      let {aqi,sunRiseSet,temperature,weather,wind}=forecastDaily;
+      console.log(temperature.value.slice(1,7));
+       cards=temperature.value.slice(1,7).map((item,i) => {
+        // let {date,img,wd,weather,week,ws,temp_day_c,temp_night_c,sun_down_time,sun_rise_time}=item;
+        
+        let tempH=temperature.value[i].from,
+            tempL=temperature.value[i].to,
+            aqiV=aqi.value[i],
+            weatherD=weather.value[i].from,
+            weatherN=weather.value[i].to,
+            winddD=wind.direction.value[i].from,
+            winddN=wind.direction.value[i].to,
+            windsD=wind.speed.value[i].from,
+            windsN=wind.speed.value[i].to;
+            
+            winddD=windSwitch(winddD);
+            winddN=windSwitch(winddN);
+        if(timeNow>=8&&timeNow<20){
+          weatherV = weatherD;
+          windd=winddD;
+          winds=windsD;
+        }else{
+          weatherV = weatherN;
+          windd=winddN;
+          winds=windsN;
+        }    
+            
+        weatherI = weatherCode(weatherV);
+            
+      
         // let {mr,ms,sr,ss}=astro,
         //     {code_d,code_n,txt_d,txt_n}=cond,
         //     {max,min}=tmp,
@@ -74,8 +106,8 @@ handleChange(value) {
         //   txt = txt_n;
         //   code=code_n;
         // }  
-        let urlImage= require(`../../assets/imgs/${img}.png`);
-        date=date.split('-')[2];
+        let urlImage= require(`../../assets/imgs/${weatherV}.png`);
+        forecastDate=sunRiseSet.value[i].from.split('T')[0].split('-')[2];
         return (
                   <Col key={i} md={{span:4,offset:3}} sm={{span:6,offset:4}} xs={{span:12,offset:6}} >
                   {/*<div className="forecast-card">*/}
@@ -84,14 +116,14 @@ handleChange(value) {
                     >
                     <p className="forecast-pos"><img src={require('../../assets/imgs/pos.png')} alt=""/>{city}</p>
 
-                     <p className="forecast-date">{date}<span>日</span></p>
+                     <p className="forecast-date">{forecastDate}<span>日</span></p>
                     <div className="forecast-weather"><p style={{backgroundImage:`url(${urlImage})`}}></p></div>
-                    <p className="forecast-temp">{temp_day_c}/{temp_night_c}℃</p>
+                    <p className="forecast-temp">{tempH}/{tempL}℃</p>
 
-                    <p className="weather">{weather}<span>/{wd}</span></p>
+                    <p className="weather">{weatherI}<span>/{windd}</span></p>
                     
-                    <p className="forecast-rise"><img src={require('../../assets/imgs/sunrise.png')}alt=""/> {sun_rise_time}</p>
-                    <p className="forecast-down"><img src={require('../../assets/imgs/sundown.png')}alt=""/> {sun_down_time}</p>
+                    <p className="forecast-rise"><img src={require('../../assets/imgs/aqi.png')}alt=""/> {aqiV}</p>
+                    <p className="forecast-down"><img src={require('../../assets/imgs/speed.png')}alt=""/> {winds}km/h</p>
   
                     </Card>
                   {/*</div>*/}
