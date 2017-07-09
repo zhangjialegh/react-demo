@@ -1,5 +1,5 @@
 
-import { Button,Spin,Card,Input,Row,Col } from 'antd';
+import { Button,Spin,Card,Input,Row,Col,Table } from 'antd';
 import './Hoursly.css';
 import echarts from 'echarts';
 import getJsonp from '../../assets/script/getJsonp';
@@ -12,51 +12,80 @@ class Hoursly extends React.Component{
    this.state={
        weatherDetailsInfo:null,
        city:'',
+       updated:false,
+       tableData:[],
      
    }
-   
-   this.set=this.set.bind(this);
-   this.handleChange=this.handleChange.bind(this);
+   this.option=null;
+   this.dailyTemp=null;
    this.textChange=this.textChange.bind(this);
    this.createEcharts=this.createEcharts.bind(this);
+   this.updateEcharts=this.updateEcharts.bind(this);
+   this.columns = [{
+            title: '时刻',
+            dataIndex: 'time',
+            }, {
+            title: '天气',        
+            dataIndex: 'weather',
+            } ,{
+            title: '温度',
+            dataIndex: 'temperature',
+            }, {
+            title: '风力',
+            dataIndex: 'windpower',
+            }, {
+            title: '风力等级',        
+            dataIndex: 'windrating',
+            }, {
+            title: '降雨',        
+            dataIndex: 'precipitation',
+            }];
   }
 
 componentDidMount(){
   let {weatherDetailsInfo,city}=this.state;
-  if(city!=='')  return;
+//   if(city!=='')  return;
   getJsonp('北京').then((data) => {
              let {weatherDetailsInfo}=data.value[0];
              this.createEcharts('北京',weatherDetailsInfo);
   });
 }
 
-
-set(city,weatherDetailsInfo){
-this.setState({city,weatherDetailsInfo})
-}
-
 createEcharts(city,weatherDetailsInfo){
-    console.log(weatherDetailsInfo,city);
     let detailsInfos,date;
     let {weather3HoursDetailsInfos}=weatherDetailsInfo;
-      let time=[],tempData=[];
-       detailsInfos=weather3HoursDetailsInfos.map((item,i) => {
+    let time=[],tempData=[],tableData=[];
+       detailsInfos=weather3HoursDetailsInfos.forEach((item,i) => {
 
-        let {startTime,highestTemperature,weather,isRainFall,img,precipitation,wd}=item;
+        let {startTime,highestTemperature,weather,precipitation,wd,ws}=item;
+        date=startTime.split(' ')[0].split('-')[2]+'日';
         
         startTime=startTime.split(' ')[1].split(':')[0]+'时';
-        date=startTime.split(' ')[0].split('-')[2]+'日';
+        wd=wd===''?'微风':wd;
+        ws=ws===''?'<3级':ws;
+
+
         time.push(startTime);
         tempData.push(highestTemperature);
-        wd=wd===''?'微风':wd;
-
-        let urlImage= require(`../../assets/imgs/${img}.png`);
-
+        
+        tableData.push({
+            key: i,
+            time: date+startTime,
+            weather: weather,
+            temperature: highestTemperature,
+            windpower: wd,
+            windrating: ws,
+            precipitation: precipitation,
+        });
+       });
+    
 this.dailyTemp=echarts.init(document.querySelector('.daily-temp'),{padding:20});
-      let option = {
-        //   backgroundColor:'#6fadbd',
+  this.dailyTemp.setOption({
+          backgroundColor:'#d2dbdd',
     title: {
-        text: '未来24小时气温变化(℃)',
+        text: `${city}未来24小时气温变化(℃)`,
+        textAlign:'center',
+        left:'50%',
     },
     tooltip: {
         trigger: 'axis'
@@ -81,7 +110,7 @@ this.dailyTemp=echarts.init(document.querySelector('.daily-temp'),{padding:20});
         type: 'category',
         boundaryGap: true,
         data: time,
-        show:false,
+        show:true,
         splitLine:{
             show:false
         }
@@ -125,49 +154,72 @@ this.dailyTemp=echarts.init(document.querySelector('.daily-temp'),{padding:20});
         }
         },
     ]
-};
+});
 
-this.dailyTemp.setOption(option);
-window.addEventListener('resize',() =>this.dailyTemp.resize())
-       })
-
+this.setState({tableData});
+window.addEventListener('resize',() =>this.dailyTemp.resize());
+this.dailyTemp.resize();
 }
-updateEcharts(time,tempData){
-this.dailyTemp.setOption({
-    xAxis:{
-       data: time,
-    },
-    series:[
-        {
-            name:'气温',
-            data:tempData,
-        }
-    ]
-})
+
+updateEcharts(city){
+    if(city.trim()==='') return;
+getJsonp(city).then((data) => {
+             let {weatherDetailsInfo}=data.value[0];
+             let {weather3HoursDetailsInfos}=weatherDetailsInfo;
+             let time=[],tempData=[],tableData=[];
+weather3HoursDetailsInfos.forEach((item,i) => {
+    let {startTime,highestTemperature,weather,precipitation,wd,ws}=item;
+    let date;    
+        date=startTime.split(' ')[0].split('-')[2]+'日';
+        startTime=startTime.split(' ')[1].split(':')[0]+'时';
+        wd=wd===''?'微风':wd;
+        ws=ws===''?'<3级':ws;
+
+        time.push(startTime);
+        tempData.push(highestTemperature);
+        tableData.push({
+            key: i,
+            time: date+startTime,
+            weather: weather,
+            temperature: highestTemperature,
+            windpower: wd,
+            windrating: ws,
+            precipitation: precipitation,
+        });
+});
+        this.dailyTemp.setOption({
+            title: {
+                   text: `${city}未来24小时气温变化(℃)`,
+            },
+            xAxis:{
+            data: time,
+            },
+            series:[
+                {
+                    name:'气温',
+                    data:tempData,
+                }
+            ]
+        })
+        this.setState({tableData});
+
+  });
 }
 textChange(e){
   this.setState({
     city:e.target.value
   })
 }
-handleChange(value) {
-  let _this=this;
-  value=value.trim().toLowerCase();
-  getJsonp(value).then(function(data) {
-                            let {weatherDetailsInfo}=data.value[0];
-                            _this.set(weatherDetailsInfo);
-                          });
-}
+
   render(){
-    let {set,handleChange,textChange}=this;
-    let {weatherDetailsInfo,city}=this.state;
+    let {textChange,updateEcharts}=this;
+    let {weatherDetailsInfo,city,updated,tableData}=this.state;
     let detailsInfos,date;
-    if(city!==''){
+    if(updated){
     let {weather3HoursDetailsInfos}=weatherDetailsInfo;
       let time=[],tempData=[];
        detailsInfos=weather3HoursDetailsInfos.map((item,i) => {
         let {startTime,highestTemperature,weather,isRainFall,img,precipitation,wd}=item;
-        
         wd=wd===''?'微风':wd;
 
         let urlImage= require(`../../assets/imgs/${img}.png`);
@@ -182,9 +234,22 @@ handleChange(value) {
     }
     return (
     <div style={{backgroundColor:'#fff'}}>
+     <div>
+        <Search
+        placeholder="input search text"
+        style={{ width: 200 }}
+        value={city}
+        onChange={textChange}
+        onSearch={value => updateEcharts(value)}
+        />
+     </div>
      <div className="daily-temp" ref="dailytemp">
 
      </div>
+     <div>
+          <h2 style={{textAlign:'center'}}>今日天气状况一览</h2>
+          <Table columns={this.columns} dataSource={tableData} size="middle" />
+    </div>
     </div>
     );
   }
