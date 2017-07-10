@@ -26,13 +26,10 @@ componentDidMount(){
 
   let {city,forecastDaily}=this.state;
   // if(city!=='')  return;
-  let _this=this;
-  getJsonp('北京').then(function(data) {
-    console.log(data);
-                            let {forecastDaily}=data;
-                            
-                            _this.set(city='北京',forecastDaily);
-                            });
+  getJsonp('北京').then((data) => {
+    let {forecastDaily}=data;
+    this.set(city='北京',forecastDaily);
+  });
 }
 
 

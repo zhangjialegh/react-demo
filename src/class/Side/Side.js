@@ -1,7 +1,7 @@
 import { Layout,Menu,Icon,Breadcrumb } from 'antd';
+import {BrowserRouter as Router,Route,Link} from 'react-router-dom';
 const {Sider}=Layout;
 const SubMenu=Menu.SubMenu;
-
 // let propTypes = {
 //   // collapsed: PT.bool,
 //   mode: PT.string,
@@ -17,40 +17,26 @@ class Side extends React.Component{
         let {collapsed,mode,onCollapse}=this.props;
         return (
              <Sider
-        breakpoint='lg'
-        collapsible
-        collapsed={collapsed}
-        onCollapse={onCollapse}
-        breakpoint={'md'}
-        style={{overflow:'scroll-y'}}
+              breakpoint='lg'
+              collapsible
+              collapsed={collapsed}
+              onCollapse={onCollapse}
+              breakpoint={'md'}
+              style={{overflow:'scroll-y'}}
         >
         <div className="logo" />
           <Menu theme="dark" mode={mode} defaultSelectedKeys={['1']}>
-            <SubMenu
-            key="sub1"
-            title={<span><Icon type="user"/><span className="nav-text">User</span></span>}
+            <SubMenu key="sub1" title={<span><Icon type="user"/><span className="nav-text">User</span></span>}
             >
-            <Menu.Item key='1'>
-              <Icon type='user'/>
-              Tom
-            </Menu.Item>
-            <Menu.Item key='2'>
-              <Icon type='video-camera'/>
-              Bill
-            </Menu.Item>
-            <Menu.Item key='3'>
-              <Icon type='upload'/>
-              Alex
-            </Menu.Item>
+            <Menu.Item key='1'><Link to="/"><Icon type='user'/>首页</Link></Menu.Item>
+            <Menu.Item key='2'><Link to="/forecast"><Icon type='video-camera'/>预报天气</Link></Menu.Item>
+            <Menu.Item key='3'><Link to="/hoursly"><Icon type='upload'/>24小时天气</Link></Menu.Item>
             </SubMenu>
 
-            <SubMenu
-            key="sub2"
-            title={<span><Icon type="team"/><span className="nav-text">Team</span></span>}
+            <SubMenu key="sub2" title={<span><Icon type="team"/><span className="nav-text">Team</span></span>}
             >
             <Menu.Item key='4'>
-              <Icon type='user'/>
-              Team 1
+              <Icon type='user'/>Team 1
             </Menu.Item>
             <Menu.Item key='5'>
               <Icon type='video-camera'/>

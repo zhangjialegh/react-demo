@@ -9,7 +9,7 @@ import Head from './class/Head/Head';
 import Body from './class/Body/Body';
 import Foot from './class/Foot/Foot';
 import Side from './class/Side/Side';
-
+import {BrowserRouter as Router} from 'react-router-dom';
 //https://reacttraining.cn/web/api/StaticRouter/context-object
 
 
@@ -32,6 +32,7 @@ class App extends React.Component{
     let {collapsed,mode}=this.state;
     let {onCollapse}=this;
     return (
+      <Router>
         <Layout style={{height:'100vh'}}>
         <Side
         collapsed={collapsed}
@@ -39,13 +40,12 @@ class App extends React.Component{
         mode={mode}
          />
          <Layout style={{height:'100vh'}}>
-           <Head/>
-         <Body />
-           <Foot/>
-
+          <Head />
+          <Body /> 
+          <Foot />
          </Layout>
-         
       </Layout>
+      </Router>
     );
   }
 };
