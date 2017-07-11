@@ -7,7 +7,7 @@
 
 import weatherInfo from './weatherInfo';
 import cityIds from './cityId';
-function getJsonp(city,timeout) {
+function getJsonp(city,flag,timeout) {
   let cityId='';
   city=city.trim();
   cityIds.forEach((item,i) => {
@@ -18,6 +18,10 @@ function getJsonp(city,timeout) {
   })
 if(cityId==='') {alert('输入的城市名有误，或者未查到该城市天气信息，请重新输入！');return;}
 let url=`https://weatherapi.market.xiaomi.com/wtr-v3/weather/all?latitude=110&longitude=112&locationKey=weathercn%3A${cityId}&days=7&appKey=weather20151024&sign=zUFJoAR2ZVrDy1vF3D07&isGlobal=false&locale=zh_cn`;
+
+if(flag){
+  url=`http://aider.meizu.com/app/weather/listWeather?cityIds=${cityId}`;
+}
 // let  url=`http://aider.meizu.com/app/weather/listWeather?cityIds=${cityId}`;
             // url+='?';
             // for (var key in data) {

@@ -4,7 +4,7 @@ import Forecast from '../Forecast/Forecast';
 import Hoursly from '../Hoursly/Hoursly';
 import {Link,Route} from 'react-router-dom';
 const {Content}=Layout;
-
+import Lifenote from '../Lifenote/Lifenote';
 // const routes={
 //     User:['首页']
 // }
@@ -25,6 +25,7 @@ constructor(props){
                <Route exact path="/" component={Main}></Route> 
                <Route path="/forecast" component={Forecast}></Route>
                <Route path="/hoursly" component={Hoursly}></Route>
+               <Route path="/lifenote" component={Lifenote}></Route>
              </Content>
             
         );

@@ -9,11 +9,11 @@ import Head from './class/Head/Head';
 import Body from './class/Body/Body';
 import Foot from './class/Foot/Foot';
 import Side from './class/Side/Side';
-import {BrowserRouter as Router,Route} from 'react-router-dom';
+
 //https://reacttraining.cn/web/api/StaticRouter/context-object
 
 
-class App extends React.Component{
+class Index extends React.Component{
   constructor(props) {
     super(props);
     this.state={
@@ -32,26 +32,24 @@ class App extends React.Component{
     let {collapsed,mode}=this.state;
     let {onCollapse}=this;
     return (
-      <Router>
         <Layout style={{height:'100vh'}}>
-          <Side
-          collapsed={collapsed}
-          onCollapse={onCollapse}
-          mode={mode}
-          />
-          <Layout style={{height:'100vh'}}>
-            <Head />
-            <Body /> 
-            <Foot />
-          </Layout>
-        </Layout>
-      </Router>
-        
+        <Side
+        collapsed={collapsed}
+        onCollapse={onCollapse}
+        mode={mode}
+         />
+         <Layout style={{height:'100vh'}}>
+          <Head />
+          <Body /> 
+          <Foot />
+         </Layout>
+      </Layout>
     );
   }
 };
 
 
-ReactDOM.render(
-<App />,
- document.getElementById('root'));
+export default Index;
+
+
+

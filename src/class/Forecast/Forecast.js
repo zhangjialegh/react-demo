@@ -44,7 +44,6 @@ textChange(e){
 handleChange(value) {
   let _this=this;
   value=value.trim().toLowerCase();
-  console.log(`selected ${value}`);
   getJsonp(value).then(function(data) {
                             let {forecastDaily}=data;
                             _this.set(value,forecastDaily);
@@ -58,7 +57,6 @@ handleChange(value) {
     // let cards,code,txt,time=new Date().getHours();
     let cards,timeNow=new Date().getHours(),weatherV,windd,winds,weatherI,forecastDate;
     if(city!==''){
-      console.log(city);
       city=city==='undefined'?'北京':city;
       // console.log(basic,daily_forecast);
       let {aqi,sunRiseSet,temperature,weather,wind}=forecastDaily;
@@ -130,8 +128,8 @@ handleChange(value) {
       })
     }
     return  city===''?(
-  <div>
-    <Spin size="large" style={{margin:'300px auto'}}/>
+  <div style={{height:30,width:30}} className="loading">
+    <Spin size="large"/>
   </div>
     ):(
     <div style={{backgroundColor:'#fff'}}>
