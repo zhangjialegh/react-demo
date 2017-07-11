@@ -1,16 +1,19 @@
 
-import { Card,Row,Col,Carousel,Input,Alert } from 'antd';
+import { Card,Row,Col,Carousel,Input,Alert,Select } from 'antd';
 import './Main.css'
 import echarts from 'echarts';
 import 'echarts/lib/chart/line'
 import weatherCode from '../../assets/script/weatherCode';
 import windSwitch from '../../assets/script/windSwitch';
 import getJsonp from '../../assets/script/getJsonp';
+
+const Option = Select.Option;
 class Main extends React.Component{
   constructor(props) {
     super(props);
     this.state={
         city:'北京',
+        optionV:'aqi',
         currentData:{
                 nowYmd:'',
                 nowHM:'',
@@ -28,6 +31,12 @@ class Main extends React.Component{
                 tempMax:'',
                 yesTempdiff:'',
          },
+         indicesData:{
+                uvIndex:'',
+                humidity:'',
+                feelsLike:'',
+                pressure:'',
+         },
          aqiData:{
              pm25:'',
              pm25Desc:'',
@@ -39,6 +48,10 @@ class Main extends React.Component{
              o3Desc:'',
              aqi:'',
              suggest:'',
+             pm10:'',
+             pm10Desc:'',
+             no2:'',
+             no2Desc:'',
             },
     }
     this.myChartTemp=null;
@@ -50,12 +63,12 @@ class Main extends React.Component{
 componentDidMount(){
     let {city}=this.state;
       getJsonp('北京').then((data) => {
-          let {current,yesterday,forecastDaily,aqi}=data;
+          let {current,yesterday,forecastDaily,aqi,indices}=data;
           console.log(data);
-          this.createMoncharts(city,current,yesterday,forecastDaily,aqi);
+          this.createMoncharts(city,current,yesterday,forecastDaily,aqi,indices);
       })
 }
-createMoncharts(city,current,yesterday,forecastDaily,aqiP){
+createMoncharts(city,current,yesterday,forecastDaily,aqiP,indices){
 
 //================Current==================
 
@@ -80,11 +93,16 @@ let yesWeatherImage=require(`../../assets/imgs/${weatherEnd}.png`);
 let yesTempdiff=tempMax-tempMin;
 //-------------------aqi---------------------
 
-let {pm25,pm25Desc,so2,so2Desc,co,coDesc,o3,o3Desc,aqi,suggest}=aqiP;
+let {pm25,pm25Desc,so2,so2Desc,co,coDesc,o3,o3Desc,aqi,suggest,pm10,pm10Desc,no2,no2Desc}=aqiP;
 
-//-------------------------------------------
+//-----------------indices-----------------------
+humidity=humidity.value;
+feelsLike=feelsLike.value;
+pressure=pressure.value;
 
-let {currentData,yesterdayData,aqiData}=this.state;
+console.log(uvIndex,humidity,feelsLike,pressure);
+//------------------------------------------
+let {currentData,yesterdayData,aqiData,indicesData}=this.state;
 
 currentData={
     nowYmd,
@@ -103,9 +121,9 @@ yesterdayData={
     tempMax,
     yesTempdiff,
 };
-aqiData={aqi,pm25,pm25Desc,so2,so2Desc,co,coDesc,o3,o3Desc,suggest};
-
-this.setState({aqiData,currentData,yesterdayData})
+aqiData={aqi,pm25,pm25Desc,so2,so2Desc,co,coDesc,o3,o3Desc,suggest,pm10,pm10Desc,no2,no2Desc};
+indicesData={uvIndex,humidity,feelsLike,pressure};
+this.setState({aqiData,currentData,yesterdayData,indicesData})
 //----------------------------------------------------------
 
 //-------------forecastDaily--------------
@@ -130,6 +148,8 @@ this.optionTemp = {
     },
     toolbox: {
         show: true,
+        right:10,
+        top:8,
             feature: {
             dataView: {readOnly: false},
             magicType: {type: ['line', 'bar']},
@@ -143,6 +163,7 @@ this.optionTemp = {
     yAxis: {
         type: 'value',
         min:'dataMin',
+        left:5,
         axisLabel: {
             formatter: '{value} °C'
         }
@@ -187,9 +208,9 @@ this.myChartTemp=echarts.init(this.refs.temp,{width:'auto',height:'auto'});
 
 //  myChartAir.setOption(optionAir);
   this.myChartTemp.setOption(this.optionTemp);
- window.addEventListener("resize",(e)=>{
-    this.myChartTemp.resize(e);
- });
+
+ window.addEventListener('resize',() =>this.myChartTemp.resize());
+this.myChartTemp.resize();
 }
 
 textChange(e){
@@ -197,32 +218,15 @@ textChange(e){
 //     cityInfo:e.target.value
 //   })
 }
+
 handleChange(value) {
-//   let _this=this;
-//   value=value.trim().toLowerCase();
-//   console.log(`selected ${value}`);
-//   getJsonp(value).then(function(data) {
-//                             let {forecastDaily}=data;
-//                             _this.set(value,forecastDaily);
-//                           });
-  //  this.setState({city:''})                         
+  this.setState({optionV:value});
 }
-
-
-
-
-
-
-
-
-
-
-
 
   render(){
 //==================================
-let {currentData,yesterdayData,aqiData}=this.state;
-console.log(currentData);
+let {handleChange}=this;
+let {city,currentData,yesterdayData,aqiData,optionV,indicesData}=this.state;
 let {
     nowYmd,
     nowHM,
@@ -241,8 +245,45 @@ let {
     yesTempdiff
 }=yesterdayData;
 
-let {aqi,suggest,pm25,pm25Desc,so2,so2Desc,co,coDesc,o3,o3Desc}=aqiData;
-console.log(suggest);
+let {aqi,suggest,pm25,pm25Desc,so2,so2Desc,co,coDesc,o3,o3Desc,pm10,pm10Desc,no2,no2Desc}=aqiData;
+let aqiRang =[[0,'优'],[50,'良'],[100,'轻度污染'],[200,'中度污染'],[300,'严重污染'],Infinity],aqiRating;
+for(let i=0;i<aqiRang.length-1;i++){
+if(aqi>aqiRang[i][0]&&aqi<=aqiRang[i+1][0]){
+    aqiRating=aqiRang[i][1];
+}
+}
+let {uvIndex,humidity,feelsLike,pressure}=indicesData;
+let message,aqiValue;
+switch (optionV) {
+    case 'aqi':
+        message=suggest;
+        aqiValue=aqi+aqiRating;
+        break;
+    case 'pm25':
+        message=pm25Desc;
+        aqiValue=pm25+'μg/m³';
+        break;
+    case 'so2':
+        message=so2Desc;
+        aqiValue=so2+'μg/m³';
+        break;
+    case 'co':
+        message=coDesc;
+        aqiValue=co+'μg/m³';
+        break;
+    case 'o3':
+        message=o3Desc;
+        aqiValue=o3+'μg/m³';
+        break;
+    case 'pm10':
+        message=pm10Desc;
+        aqiValue=pm10+'μg/m³';
+        break;
+    case 'no2':
+        message=no2Desc;
+        aqiValue=no2+'μg/m³';
+        break;
+}
 //------------------------------------------
 
 
@@ -298,18 +339,76 @@ console.log(suggest);
             </Col>
             <Col md={8} sm={24}>
                 <Card className="search-card">
-                    <p>11111111111</p>
+                    <h2 style={{padding:10}}>{city}</h2>
                     <Carousel autoplay dots={false} className="flash-box">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
+                    <div style={{backgroundImage:`url(${require('../../assets/imgs/a1.jpg')})`}}></div>
+                    <div style={{backgroundImage:`url(${require('../../assets/imgs/a2.jpg')})`}}></div>
+                    <div style={{backgroundImage:`url(${require('../../assets/imgs/a3.jpg')})`}}></div>
+                    <div style={{backgroundImage:`url(${require('../../assets/imgs/a4.jpg')})`}}></div>
                     </Carousel>
-                    <p>{aqi}</p>
-                    <Alert message={suggest} type="info" />
+                    <Select
+                        showSearch
+                        placeholder="Select a person"
+                        optionFilterProp="children"
+                        onChange={handleChange}
+                        defaultValue="AQI"
+                        className="selecter"
+                        >
+                        <Option value="aqi">AQI</Option>
+                        <Option value="co">CO</Option>
+                        <Option value="no2">NO2</Option>
+                        <Option value="o3">O3</Option>
+                        <Option value="pm10">PM10</Option>
+                        <Option value="pm25">PM2.5</Option>
+                        <Option value="so2">SO2</Option>
+                    </Select>
+                    <p style={{fontSize:20,fontWeight:500,padding:10}}>{aqiValue}</p>
+                    <Alert style={{padding:10}} message={message} type="info" />
                 </Card>
             </Col>
+           <Col md={8} sm={24} className="indices">
+           <Row>
+               <Col md={8} sm={12} xs={24}>
+               <div className="indices-item"> 
+                   <p><i style={{backgroundImage:`url(${require('../../assets/imgs/windDir.png')})`}}></i>  <span>{nowwindDire}</span></p>
+                   <p>{nowSpeed}</p>
+               </div>
+               </Col>
+               <Col md={8} sm={12} xs={24}>
+               <div className="indices-item">
+                   <p ><i style={{backgroundImage:`url(${require('../../assets/imgs/humi.png')})`}}></i>  <span>空气湿度</span></p>
+                   <p>{humidity}%</p>
+               </div>
+               </Col>
+               <Col md={8} sm={12} xs={24}>
+               <div className="indices-item">
+                   <p><i style={{backgroundImage:`url(${require('../../assets/imgs/ftemp.png')})`}}></i>  <span>体感温度</span></p>
+                   <p>{feelsLike}℃</p>
+               </div>
+               </Col>
+           </Row>
+           <Row style={{paddingTop:10}}>
+               <Col md={8} sm={12} xs={24}>
+               <div className="indices-item"> 
+                   <p><i style={{backgroundImage:`url(${require('../../assets/imgs/aqis.png')})`}}></i>  <span>空气质量</span></p>
+                   <p>{aqi} {aqiRating}</p>
+               </div>
+               </Col>
+               <Col md={8} sm={12} xs={24}>
+               <div className="indices-item">
+                   <p ><i style={{backgroundImage:`url(${require('../../assets/imgs/arip.png')})`}}></i>  <span>气体压强</span></p>
+                   <p>{pressure}hPa</p>
+               </div>
+               </Col>
+               <Col md={8} sm={12} xs={24}>
+               <div className="indices-item">
+                   <p><i style={{backgroundImage:`url(${require('../../assets/imgs/uvs.png')})`}}></i>  <span>紫外线</span></p>
+                   <p>{uvIndex}</p>
+               </div>
+               </Col>
+           </Row>
            
+           </Col>
         </Row>
 
            <Row type="flex" justify="space-between" align="middle">

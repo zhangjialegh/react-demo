@@ -32,7 +32,7 @@ class App extends React.Component{
     let {collapsed,mode}=this.state;
     let {onCollapse}=this;
     return (
-      <Router>
+      <Router basename='/'>
         <Layout style={{height:'100vh'}}>
         <Side
         collapsed={collapsed}
@@ -42,7 +42,7 @@ class App extends React.Component{
          <Layout style={{height:'100vh'}}>
           <Head />
           <Body /> 
-          <Foot />
+          {/*<Foot />*/}
          </Layout>
       </Layout>
       </Router>
