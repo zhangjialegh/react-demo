@@ -27,7 +27,7 @@ class Side extends React.Component{
               collapsedWidth="0"
            //   {/*onCollapse={onCollapse}*/}
               breakpoint={'lg'}
-              style={{overflow:'scroll-y'}}
+              style={{overflow:'scroll-y',zIndex:999}}
         >
         <div className="logo" />
           <Menu theme="dark" mode={mode} defaultSelectedKeys={['1']}>

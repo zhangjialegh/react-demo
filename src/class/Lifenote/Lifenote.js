@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Card,Input,Row,Col } from 'antd';
-import './Lifenote.css';
+import './Lifenote.less';
 import getJsonp from '../../assets/script/getJsonp';
 
 class Lifenote extends React.Component{
