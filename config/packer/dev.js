@@ -14,6 +14,7 @@ const themeVariables=lessToJs(fs.readFileSync(path.resolve(__dirname, '../../src
 const base = require('./base.js');
 
 module.exports = {
+  devtool:"cheap-module-eval-source-map",
   context: base.rootPath,
   entry: {
     main: ['./src/app.js'],

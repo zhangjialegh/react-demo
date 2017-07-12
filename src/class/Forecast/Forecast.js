@@ -23,12 +23,26 @@ class Forecast extends React.Component{
   }
 
 componentDidMount(){
-
   let {city,forecastDaily}=this.state;
+  
+  if(localStorage.getItem('mainData')){
+      const localData=JSON.parse(localStorage.getItem('mainData'));
+        
+        if(JSON.parse(localStorage.getItem('savecity'))){
+          console.log('读取到本地数据了main');
+          city=JSON.parse(localStorage.getItem('savecity'));
+        }
+        console.log(localData);
+        let {forecastDaily}=localData;
+        this.set(city,forecastDaily);
+        
+        return;
+       }
+       
   // if(city!=='')  return;
-  getJsonp('北京').then((data) => {
+  getJsonp(city).then((data) => {
     let {forecastDaily}=data;
-    this.set(city='北京',forecastDaily);
+    this.set(city,forecastDaily);
   });
 }
 
@@ -57,10 +71,8 @@ handleChange(value) {
     // let cards,code,txt,time=new Date().getHours();
     let cards,timeNow=new Date().getHours(),weatherV,windd,winds,weatherI,forecastDate;
     if(city!==''){
-      city=city==='undefined'?'北京':city;
       // console.log(basic,daily_forecast);
       let {aqi,sunRiseSet,temperature,weather,wind}=forecastDaily;
-      console.log(temperature.value.slice(1,7));
        cards=temperature.value.slice(1,7).map((item,i) => {
         // let {date,img,wd,weather,week,ws,temp_day_c,temp_night_c,sun_down_time,sun_rise_time}=item;
         

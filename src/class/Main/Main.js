@@ -14,9 +14,9 @@ class Main extends React.Component{
     this.state={
         city:'北京',
         optionV:'aqi',
+        nowHM:'',
         currentData:{
                 nowYmd:'',
-                nowHM:'',
                 nowWeatherInfo:'',
                 nowWeatherImage:'',
                 nowwindDire:'',
@@ -61,10 +61,28 @@ class Main extends React.Component{
    this.createMoncharts=this.createMoncharts.bind(this);
   }
 componentDidMount(){
-    let {city}=this.state;
-      getJsonp('北京').then((data) => {
+    let {city,nowHM}=this.state;
+    
+    if(localStorage.getItem('mainData')){
+        const localData=JSON.parse(localStorage.getItem('mainData'));
+          let {current,yesterday,forecastDaily,aqi,indices}=localData;
+          
+          
+          if(JSON.parse(localStorage.getItem('savecity'))){
+            console.log('读取到本地数据了main');
+            city=JSON.parse(localStorage.getItem('savecity'));
+          }
+          
+          this.createMoncharts(city,current,yesterday,forecastDaily,aqi,indices);
+          
+          return;
+         }
+         
+         
+          getJsonp(city).then((data) => {
+           localStorage.setItem('mainData',JSON.stringify(data));
+           localStorage.setItem('savecity',JSON.stringify(city));
           let {current,yesterday,forecastDaily,aqi,indices}=data;
-          console.log(data);
           this.createMoncharts(city,current,yesterday,forecastDaily,aqi,indices);
       })
 }
@@ -78,6 +96,17 @@ let nowwindDire=direction.value,nowSpeed=speed.value;
 let nowYmd=new Date().toDateString();
 let nowHms=new Date().toTimeString().split(' ')[0].split(':');
 let nowHM=nowHms[0]+':'+nowHms[1];
+this.setState({
+  nowHM,
+})
+// setInterval(() => {
+//   let nowHms=new Date().toTimeString().split(' ')[0].split(':');
+//   let nowHM=nowHms[0]+':'+nowHms[1];
+//   this.setState({
+//     nowHM,
+//   })
+// },30000)
+
 let nowWeatherImage=require(`../../assets/imgs/${weather}.png`);
 let nowWeatherInfo=weatherCode(weather);
 nowwindDire=windSwitch(nowwindDire);
@@ -106,7 +135,6 @@ let {currentData,yesterdayData,aqiData,indicesData}=this.state;
 
 currentData={
     nowYmd,
-    nowHM,
     nowWeatherInfo,
     nowWeatherImage,
     nowwindDire,
@@ -123,14 +151,14 @@ yesterdayData={
 };
 aqiData={aqi,pm25,pm25Desc,so2,so2Desc,co,coDesc,o3,o3Desc,suggest,pm10,pm10Desc,no2,no2Desc};
 indicesData={uvIndex,humidity,feelsLike,pressure};
-this.setState({aqiData,currentData,yesterdayData,indicesData})
+this.setState({city,aqiData,currentData,yesterdayData,indicesData})
 //----------------------------------------------------------
 
 //-------------forecastDaily--------------
 
 let foreTempData=forecastDaily.temperature.value,foreDates=forecastDaily.sunRiseSet.value,foreHtemp=[],foreLtemp=[],foreDate=[];
 
-foreTempData.forEach((item,i) => {
+foreTempData.slice(0,7).forEach((item,i) => {
     foreHtemp.push(item.from);
     foreLtemp.push(item.to);
     foreDate.push(foreDates[i].from.split('T')[0].split('-')[2]+'日');
@@ -208,8 +236,9 @@ this.myChartTemp=echarts.init(this.refs.temp,{width:'auto',height:'auto'});
 
 //  myChartAir.setOption(optionAir);
   this.myChartTemp.setOption(this.optionTemp);
-
- window.addEventListener('resize',() =>this.myChartTemp.resize());
+window.onresize=() => {
+  this.myChartTemp.resize();
+}
 this.myChartTemp.resize();
 }
 
@@ -226,10 +255,9 @@ handleChange(value) {
   render(){
 //==================================
 let {handleChange}=this;
-let {city,currentData,yesterdayData,aqiData,optionV,indicesData}=this.state;
+let {city,currentData,yesterdayData,aqiData,optionV,indicesData,nowHM}=this.state;
 let {
     nowYmd,
-    nowHM,
     nowWeatherInfo,
     nowWeatherImage,
     nowwindDire,
@@ -386,8 +414,6 @@ switch (optionV) {
                    <p>{feelsLike}℃</p>
                </div>
                </Col>
-           </Row>
-           <Row style={{paddingTop:10}}>
                <Col md={8} sm={12} xs={24}>
                <div className="indices-item"> 
                    <p><i style={{backgroundImage:`url(${require('../../assets/imgs/aqis.png')})`}}></i>  <span>空气质量</span></p>

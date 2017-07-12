@@ -12,7 +12,8 @@ class Hoursly extends React.Component{
     super(props);
    this.state={
        forecastHourly:null,
-       city:'',
+       city:'北京',
+       val:'',
        updated:false,
        tableData:[],
      
@@ -45,10 +46,25 @@ class Hoursly extends React.Component{
 
 componentDidMount(){
   let {forecastHourly,city}=this.state;
+  
+  if(localStorage.getItem('mainData')){
+      const localData=JSON.parse(localStorage.getItem('mainData'));
+        
+        if(JSON.parse(localStorage.getItem('savecity'))){
+          console.log('读取到本地数据了main');
+          city=JSON.parse(localStorage.getItem('savecity'));
+        }
+        let {forecastHourly}=localData
+        this.createEcharts(city,forecastHourly);
+        return;
+       }
+       
+       
 //   if(city!=='')  return;
-  getJsonp('北京').then((data) => {
+  getJsonp(city).then((data) => {
+            
              let {forecastHourly}=data
-             this.createEcharts('北京',forecastHourly);
+             this.createEcharts(city,forecastHourly);
   });
 }
 
@@ -98,11 +114,10 @@ this.dailyTemp=echarts.init(document.querySelector('.daily-temp'),{padding:20});
     // },
     toolbox: {
         show: true,
+        right:30,
+        top:10,
         orient:'vertical',
         feature: {
-            dataZoom: {
-                yAxisIndex: 'none'
-            },
             dataView: {readOnly: false},
             magicType: {type: ['line', 'bar']},
         }
@@ -165,6 +180,10 @@ this.dailyTemp.resize();
 
 updateEcharts(city){
     if(city.trim()==='') return;
+    
+    this.setState({
+      val:''
+    })
 getJsonp(city).then((data) => {
   let {forecastHourly}=data;
   let {aqi,temperature,weather,wind}=forecastHourly;
@@ -214,13 +233,13 @@ getJsonp(city).then((data) => {
 }
 textChange(e){
   this.setState({
-    city:e.target.value
+    val:e.target.value
   })
 }
 
   render(){
     let {textChange,updateEcharts}=this;
-    let {forecastHourly,city,updated,tableData}=this.state;
+    let {forecastHourly,city,updated,tableData,val}=this.state;
     let detailsInfos,date;
     // if(updated){
     // let {weather3HoursDetailsInfos}=forecastHourly;
@@ -245,7 +264,7 @@ textChange(e){
         <Search
         placeholder="input search text"
         style={{ width: 200 }}
-        value={city}
+        value={val}
         onChange={textChange}
         onSearch={value => updateEcharts(value)}
         />

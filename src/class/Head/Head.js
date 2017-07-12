@@ -1,4 +1,5 @@
 import { Layout,Avatar,Menu,Dropdown,Icon} from 'antd';
+import {BrowserRouter as Router,Route,Link} from 'react-router-dom';
 const {Header}=Layout;
 import './index.less';
 
@@ -7,8 +8,8 @@ class Head extends React.Component{
         super(props);
         this.onClick=this.onClick.bind(this);
     }
-    onClick(){
-
+    onClick(e){
+console.log(e.target);
     }
     render(){
         let {onClick}=this;
@@ -16,9 +17,9 @@ class Head extends React.Component{
         const menu = (
                         <Menu style={{width:100,textAlign:'center'}} onClick={onClick}>
                             <Menu.Item key="1">个人信息</Menu.Item>
-                            <Menu.Item key="2">用户中心</Menu.Item>
+                            <Menu.Item key="2"><Link to="/layout/citymanage">城市管理</Link></Menu.Item>
                             <Menu.Item key="3">系统设置</Menu.Item>
-                            <Menu.Item key="4">个人设置</Menu.Item>
+                            <Menu.Item key="4"><Link to="/">退出</Link></Menu.Item>
                         </Menu>
                         );
         return (

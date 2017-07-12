@@ -2,6 +2,7 @@ import { Layout,Menu,Icon,Breadcrumb } from 'antd';
 import {BrowserRouter as Router,Route,Link} from 'react-router-dom';
 const {Sider}=Layout;
 const SubMenu=Menu.SubMenu;
+import './Side.less';
 // let propTypes = {
 //   // collapsed: PT.bool,
 //   mode: PT.string,
@@ -22,35 +23,36 @@ class Side extends React.Component{
         let {click}=this;
         return (
              <Sider
+               style={{backgroundColor:'#fff'}}
              // {/*collapsible*/}
             //  {/*collapsed={collapsed}*/}
               collapsedWidth="0"
            //   {/*onCollapse={onCollapse}*/}
               breakpoint={'lg'}
-              style={{overflow:'scroll-y'}}
+              style={{overflow:'scroll-y',zIndex:999}}
         >
-        <div className="logo" />
-          <Menu theme="dark" mode={mode} defaultSelectedKeys={['1']}>
+        <div className="logo" style={{backgroundColor:'#fff'}}/>
+          <Menu theme="light" mode={mode} defaultSelectedKeys={['1']}>
             <SubMenu key="sub1" title={<span><Icon type="user"/><span className="nav-text">User</span></span>}
             onClick={click}
             >
-            <Menu.Item key='1' ><Link onClick={click} to="/"><Icon type='user'/>首页</Link></Menu.Item>
-            <Menu.Item key='2' ><Link onClick={click} to="/forecast"><Icon type='video-camera'/>预报天气</Link></Menu.Item>
-            <Menu.Item key='3' ><Link onClick={click} to="/hoursly"><Icon type='upload'/>24小时天气</Link></Menu.Item>
-            <Menu.Item key='4' ><Link onClick={click} to="/lifenote"><Icon type='heart'/>生活小贴士</Link></Menu.Item>
+            <Menu.Item key='1' ><Link onClick={click} to="/layout/main"><Icon type='user'/>首页</Link></Menu.Item>
+            <Menu.Item key='2' ><Link onClick={click} to="/layout/forecast"><Icon type='video-camera'/>预报天气</Link></Menu.Item>
+            <Menu.Item key='3' ><Link onClick={click} to="/layout/hoursly"><Icon type='upload'/>24小时天气</Link></Menu.Item>
+            <Menu.Item key='4' ><Link onClick={click} to="/layout/lifenote"><Icon type='heart'/>生活小贴士</Link></Menu.Item>
             </SubMenu>
 
             <SubMenu key="sub2" title={<span><Icon type="team"/><span className="nav-text">Team</span></span>}
             >
-            <Menu.Item key='4'>
+            <Menu.Item key='5'>
               <Icon type='user'/>Team 1
             </Menu.Item>
-            <Menu.Item key='5'>
+            <Menu.Item key='6'>
               <Icon type='video-camera'/>
               Team 2
             </Menu.Item>
             </SubMenu>
-            <Menu.Item key='6'>
+            <Menu.Item key='7'>
               <span>
                 <Icon type="file"/>
                 <span className="nav-text">File</span>

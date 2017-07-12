@@ -1,19 +1,20 @@
 // import React from 'react';
 // import ReactDOM from 'react-dom';
 
-import { Layout,Menu,Icon } from 'antd';
+import { Layout } from 'antd';
 const {Sider}=Layout;
-const SubMenu=Menu.SubMenu;
-import './assets/style/index.css';
-import Head from './class/Head/Head';
-import Body from './class/Body/Body';
-import Foot from './class/Foot/Foot';
-import Side from './class/Side/Side';
+import './Layout.less';
+import Struct from '../Struct/Struct';
+import Side from '../Side/Side';
+import {Route} from 'react-router-dom';
+
+
+
 
 //https://reacttraining.cn/web/api/StaticRouter/context-object
 
 
-class Index extends React.Component{
+class Layouter extends React.Component{
   constructor(props) {
     super(props);
     this.state={
@@ -33,23 +34,14 @@ class Index extends React.Component{
     let {onCollapse}=this;
     return (
         <Layout style={{height:'100vh'}}>
-        <Side
-        collapsed={collapsed}
-        onCollapse={onCollapse}
-        mode={mode}
-         />
-         <Layout style={{height:'100vh'}}>
-          <Head />
-          <Body /> 
-          <Foot />
-         </Layout>
-      </Layout>
+          <Side
+          collapsed={collapsed}
+          onCollapse={onCollapse}
+          mode={mode}
+          />
+          <Struct/>
+        </Layout>
     );
   }
 };
-
-
-export default Index;
-
-
-
+export default Layouter;

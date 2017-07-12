@@ -1,25 +1,40 @@
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
-import App from '../../app';
-import './index.less';
+import { Form, Icon, Input, Button, Checkbox,message } from 'antd';
+import './Login.less';
+import {BrowserRouter as Router,Route,Link} from 'react-router-dom';
 const FormItem = Form.Item;
 
 class NormalLoginForm extends React.Component {
-  handleSubmit  (e) {
+  constructor(props){
+    super(props);
+    this.handleSubmit=this.handleSubmit.bind(this);
+  }
+  handleSubmit (e)  {
     e.preventDefault();
+    console.log(e.target);
+    let history=this.props.history;
     this.props.form.validateFields((err, values) => {
-
-        console.log(values);
-    //   if (!err) {
-    //       console.log(111);
-    //     console.log('Received values of form: ', values);
-    //     ReactDOM.render(<App />, document.getElementById('root'));
-    //   }
+      if (!err) {
+        let {password,userName}=values;
+        const registInfo=JSON.parse(localStorage.getItem('registInfo'));
+        let confirm=false;
+        for(let item of registInfo){
+          if(password===item.password&&userName===item.nickname){
+            confirm=true;
+            history.push("/layout/main",null);
+          }
+        }
+        
+        if(!confirm){
+          message.info('用户名或密码错误,请重新输入!');
+        }
+        // console.log('Received values of form: ', values);
+      }
     });
   }
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
-      <Form onSubmit={this.handleSubmit} className="login-form">
+      <Form onSubmit={this.handleSubmit} className="login-form" action="/">
         <FormItem>
           {getFieldDecorator('userName', {
             rules: [{ required: true, message: 'Please input your username!' }],
@@ -35,17 +50,17 @@ class NormalLoginForm extends React.Component {
           )}
         </FormItem>
         <FormItem>
-          {getFieldDecorator('remember', {
+          {/* {getFieldDecorator('remember', {
             valuePropName: 'checked',
             initialValue: true,
           })(
-            <Checkbox>Remember me</Checkbox>
-          )}
-          <a className="login-form-forgot" href="">Forgot password</a>
+            // <Checkbox>Remember me</Checkbox>
+          )} */}
+          {/* <a className="login-form-forgot" href="">Forgot password</a> */}
           <Button type="primary" htmlType="submit" className="login-form-button">
             Log in
           </Button>
-          Or <a href="">register now!</a>
+          Or <Link to="/regist">register now!</Link>
         </FormItem>
       </Form>
     );
@@ -54,11 +69,4 @@ class NormalLoginForm extends React.Component {
 
 const WrappedNormalLoginForm = Form.create()(NormalLoginForm);
 
-ReactDOM.render(<WrappedNormalLoginForm />, document.getElementById('root'));
-
-
-
-
-if(module.hot){
-  module.hot.accept();
-}
+export default WrappedNormalLoginForm;

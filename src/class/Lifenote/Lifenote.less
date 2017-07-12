@@ -1,5 +1,6 @@
 .indexes{
     .indexes-item{
+        height: 314px;
         display: flex;
         justify-content: space-around;
         align-items: center;
@@ -13,4 +14,50 @@
             font-size: 20px;
         }
     }
+    
+    .indexeshide{
+      display: none;
+    }
+    
+    .indexes-info{
+      height: 314px;
+      display: none;
+      margin: 10px 5px;
+      padding: 50px 20px;
+      background-color: #fff ;
+      h1{
+        color: #f00;
+      }
+      h1+p{
+        font-size: 16px;
+      }
+      div{
+        display: flex;
+        justify-content: space-between;
+        div{
+          display: flex;
+          justify-content:flex-end;
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        img{
+          // float: right;
+        }
+      }
+      
+    }
+    
+    .indexesshow{
+      display: block;
+    }
+    
+}
+.indexes-box{
+  position: relative;
+  .ex-switch{
+    position: absolute;
+    
+    right: 20px;
+    top:20px;
+  } 
 }
