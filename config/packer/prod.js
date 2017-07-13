@@ -37,13 +37,26 @@ module.exports = {
           use: {loader: 'css-loader', options: {modules: false}}
         })
       },
+      // {
+      //   test: /\.less$/,
+      //   use: [
+      //     require.resolve('style-loader'),
+      //     require.resolve('css-loader'),
+      //     {
+      //       loader: require.resolve('less-loader'),
+      //       options: {
+      //         modifyVars:themeVariables,
+      //       },
+      //     },
+      //   ],
+      // },
       {
         test: /\.jsx?$/,
         include: base.srcPath,
         use: {loader:'babel-loader',options:{
-          // plugins:[
-          //   ['import', { libraryName: 'antd', style: 'css' }],
-          // ],
+          plugins:[
+            ['import', { libraryName: 'antd', style: 'css' }],
+          ],
         }}
       },
       {

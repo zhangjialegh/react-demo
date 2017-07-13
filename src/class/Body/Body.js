@@ -1,3 +1,5 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { Layout,Menu,Icon,Breadcrumb } from 'antd';
 import Login from '../Login/Login';
 import Regist from '../Regist/Regist';
@@ -17,19 +19,20 @@ constructor(props){
 
 }
     render(){
+      const {city,changeCity,selectKey}=this.props;
         return (
-              <Content style={{margin:'0 16px',overflow: 'initial' }}>
+              <Content style={{margin:'0 16px',overflow: 'initial',padding:'20px 0' }}>
                <Breadcrumb style={{margin:'12px 0'}}>
-               <Breadcrumb.Item>User</Breadcrumb.Item>
+               <Breadcrumb.Item></Breadcrumb.Item>
                </Breadcrumb>
                <Breadcrumb ></Breadcrumb>
                  {/* <Route exact path="/" component={Login}></Route>
                  <Route path="/regist" component={Regist}></Route> */}
-                 <Route path="/layout/main" component={Main}></Route> 
-                 <Route path="/layout/forecast" component={Forecast}></Route>
-                 <Route path="/layout/hoursly" component={Hoursly}></Route>
-                 <Route path="/layout/lifenote" component={Lifenote}></Route>
-                 <Route path="/layout/citymanage" component={Citymanage}></Route>
+                 <Route path="/layout/main" render={() =><Main city={city} />}></Route> 
+                 <Route path="/layout/forecast" render={() =><Forecast city={city} />}></Route>
+                 <Route path="/layout/hoursly" render={() =><Hoursly city={city} />}></Route>
+                 <Route path="/layout/lifenote" render={() =><Lifenote city={city} />}></Route>
+                 <Route path="/layout/citymanage" render={() =><Citymanage city={city} selectKey={selectKey} changeCity={changeCity}/>}></Route>
              </Content>
             
         );

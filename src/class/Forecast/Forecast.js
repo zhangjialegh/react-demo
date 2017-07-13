@@ -1,43 +1,44 @@
 
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { Button,Spin,Card,Input,Row,Col } from 'antd';
 import './Forecast.css';
 import echarts from 'echarts';
-import  {optionAir,optionTemp} from './echarts';
 import getJsonp from '../../assets/script/getJsonp';
 import windSwitch from '../../assets/script/windSwitch';
 import weatherCode from '../../assets/script/weatherCode';
+import QueueAnim from 'rc-queue-anim';
 const Search = Input.Search;
 
 class Forecast extends React.Component{
   constructor(props) {
     super(props);
    this.state={
-       cityInfo:'',
-       city:'',
+       cityName:'',
        forecastDaily:'',
    }
    
    this.set=this.set.bind(this);
-   this.handleChange=this.handleChange.bind(this);
-   this.textChange=this.textChange.bind(this);
+  //  this.handleChange=this.handleChange.bind(this);
+  //  this.textChange=this.textChange.bind(this);
   }
 
 componentDidMount(){
-  let {city,forecastDaily}=this.state;
-  
-  if(localStorage.getItem('mainData')){
-      const localData=JSON.parse(localStorage.getItem('mainData'));
-        
-        if(JSON.parse(localStorage.getItem('savecity'))){
-          console.log('读取到本地数据了main');
-          city=JSON.parse(localStorage.getItem('savecity'));
-        }
-        console.log(localData);
-        let {forecastDaily}=localData;
-        this.set(city,forecastDaily);
-        
-        return;
-       }
+  let {forecastDaily}=this.state;
+  const {city}=this.props;
+  // if(localStorage.getItem('mainData')){
+  //     const localData=JSON.parse(localStorage.getItem('mainData'));
+  //       
+  //       if(JSON.parse(localStorage.getItem('savecity'))){
+  //         console.log('读取到本地数据了main');
+  //         city=JSON.parse(localStorage.getItem('savecity'));
+  //       }
+  //       console.log(localData);
+  //       let {forecastDaily}=localData;
+  //       this.set(city,forecastDaily);
+  //       
+  //       return;
+  //      }
        
   // if(city!=='')  return;
   getJsonp(city).then((data) => {
@@ -48,29 +49,27 @@ componentDidMount(){
 
 
 set(city,forecastDaily){
-this.setState({cityInfo:'',city,forecastDaily})
+this.setState({cityName:city,forecastDaily})
 }
-textChange(e){
-  this.setState({
-    cityInfo:e.target.value
-  })
-}
-handleChange(value) {
-  let _this=this;
-  value=value.trim().toLowerCase();
-  getJsonp(value).then(function(data) {
-                            let {forecastDaily}=data;
-                            _this.set(value,forecastDaily);
-                          });
-  //  this.setState({city:''})                         
-}
+// textChange(e){
+//   this.setState({
+//     cityName:e.target.value
+//   })
+// }
+// handleChange(value) {
+//   value=value.trim().toLowerCase();
+//   getJsonp(value).then((data)=> {
+//                             let {forecastDaily}=data;
+//                             this.set(value,forecastDaily);
+//                           });
+//   //  this.setState({city:''})                         
+// }
   render(){
     let {set,handleChange,textChange}=this;
-    let {cityInfo,city,forecastDaily}=this.state;
-    
+    let {cityName,forecastDaily}=this.state;
     // let cards,code,txt,time=new Date().getHours();
     let cards,timeNow=new Date().getHours(),weatherV,windd,winds,weatherI,forecastDate;
-    if(city!==''){
+    if(forecastDaily!==''){
       // console.log(basic,daily_forecast);
       let {aqi,sunRiseSet,temperature,weather,wind}=forecastDaily;
        cards=temperature.value.slice(1,7).map((item,i) => {
@@ -99,29 +98,16 @@ handleChange(value) {
         }    
             
         weatherI = weatherCode(weatherV);
-            
-      
-        // let {mr,ms,sr,ss}=astro,
-        //     {code_d,code_n,txt_d,txt_n}=cond,
-        //     {max,min}=tmp,
-        //     {deg,dir,sc,spd}=wind;
-    // console.log(code_d,code_n);
-        // if(time>5&&time<19){
-        //   txt = txt_d;
-        //   code=code_d;
-        // } else{
-        //   txt = txt_n;
-        //   code=code_n;
-        // }  
+
         let urlImage= require(`../../assets/imgs/${weatherV}.png`);
+        let bkColor=`rgb(${Math.round(Math.random()*75+125)},${Math.round(Math.random()*75+125)},${Math.round(Math.random()*75+125)})`;
         forecastDate=sunRiseSet.value[i].from.split('T')[0].split('-')[2];
         return (
-                  <Col key={i} md={{span:4,offset:3}} sm={{span:6,offset:4}} xs={{span:12,offset:6}} >
-                  {/*<div className="forecast-card">*/}
-                    <Card style={{background:'#78cbe1',borderRadius:'10px'}}
+                  <Col key={i} md={7} sm={7} xs={18} style={{margin:'0 0 10px 0'}}>
+                    <Card style={{background:bkColor,borderRadius:'10px'}}
                     className="forecast-card"
                     >
-                    <p className="forecast-pos"><img src={require('../../assets/imgs/pos.png')} alt=""/>{city}</p>
+                    <p className="forecast-pos"><img src={require('../../assets/imgs/pos.png')} alt=""/>{cityName}</p>
 
                      <p className="forecast-date">{forecastDate}<span>日</span></p>
                     <div className="forecast-weather"><p style={{backgroundImage:`url(${urlImage})`}}></p></div>
@@ -133,36 +119,21 @@ handleChange(value) {
                     <p className="forecast-down"><img src={require('../../assets/imgs/speed.png')}alt=""/> {winds}km/h</p>
   
                     </Card>
-                  {/*</div>*/}
                     
                 </Col>
         )
       })
     }
-    return  city===''?(
+    return  forecastDaily===''?(
   <div style={{height:30,width:30}} className="loading">
     <Spin size="large"/>
   </div>
     ):(
-    <div style={{backgroundColor:'#fff'}}>
-        <Row type="flex" justify="center" align="center">
-          <Col md={12} sm={12} xs={24}>
-          <Search
-          placeholder=" Please input search city"
-          style={{ width: 200 ,margin:'20px'}}
-          value={cityInfo}
-          onChange={(e) => {
-          textChange(e);
-          }}
-          onSearch={(value) => {
-          handleChange(value);
-          }}
-        />
-          </Col>
-        </Row>
-        {/*<Row type="flex" justify="center" align="center">*/}
-        <Row>
-          {cards}
+    <div style={{backgroundColor:'#fff',padding:'10px'}}>
+        <Row style={{paddingLeft:'10%'}}>
+          <QueueAnim delay={300} className="queue-simple">
+            {cards}
+          </QueueAnim>
         </Row>
     </div>
     );

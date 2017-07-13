@@ -1,5 +1,7 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete,message } from 'antd';
-import './Regist.less';
+import './Regist.css';
 const FormItem = Form.Item;
 const Option = Select.Option;
 const AutoCompleteOption = AutoComplete.Option;
@@ -15,10 +17,10 @@ class RegistrationForm extends React.Component {
       autoCompleteResult: [],
     };
     this.handleSubmit=this.handleSubmit.bind(this);
-    this.handleConfirmBlur=this.handleConfirmBlur.bind(this);
+    // this.handleConfirmBlur=this.handleConfirmBlur.bind(this);
     this.checkPassword=this.checkPassword.bind(this);
-    this.checkConfirm=this.checkConfirm.bind(this);
-    this.handleWebsiteChange=this.handleWebsiteChange.bind(this);
+    // this.checkConfirm=this.checkConfirm.bind(this);
+    // this.handleWebsiteChange=this.handleWebsiteChange.bind(this);
   }
   
   handleSubmit (e)  {
@@ -44,14 +46,14 @@ class RegistrationForm extends React.Component {
           registConfirm:true
         })
         console.log(history);
-        history.push("/login",null);
+        history.push("/",null);
       }
     });
   }
-  handleConfirmBlur (e)  {
-    const value = e.target.value;
-    this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-  }
+  // handleConfirmBlur (e)  {
+  //   const value = e.target.value;
+  //   this.setState({ confirmDirty: this.state.confirmDirty || !!value });
+  // }
   checkPassword (rule, value, callback)  {
     const form = this.props.form;
     if (value && value !== form.getFieldValue('password')) {
@@ -60,28 +62,28 @@ class RegistrationForm extends React.Component {
       callback();
     }
   }
-  checkConfirm (rule, value, callback)  {
-    const form = this.props.form;
-    if (value && this.state.confirmDirty) {
-      form.validateFields(['confirm'], { force: true });
-    }
-    callback();
-  }
-
-  handleWebsiteChange (value)  {
-    let autoCompleteResult;
-    if (!value) {
-      autoCompleteResult = [];
-    } else {
-      autoCompleteResult = ['.com', '.org', '.net'].map(domain => `${value}${domain}`);
-    }
-    this.setState({ autoCompleteResult });
-  }
+  // checkConfirm (rule, value, callback)  {
+  //   const form = this.props.form;
+  //   if (value && this.state.confirmDirty) {
+  //     form.validateFields(['confirm'], { force: true });
+  //   }
+  //   callback();
+  // }
+  // 
+  // handleWebsiteChange (value)  {
+  //   let autoCompleteResult;
+  //   if (!value) {
+  //     autoCompleteResult = [];
+  //   } else {
+  //     autoCompleteResult = ['.com', '.org', '.net'].map(domain => `${value}${domain}`);
+  //   }
+  //   this.setState({ autoCompleteResult });
+  // }
 
   render() {
     const { getFieldDecorator } = this.props.form;
     const { autoCompleteResult} = this.state;
-
+    console.log(this.props);
     const formItemLayout = {
       labelCol: {
         xs: { span: 16,offset:4 },
@@ -122,6 +124,7 @@ class RegistrationForm extends React.Component {
             }, {
               required: true, message: 'Please input your E-mail!',
             }],
+            validateTrigger:'onBlur',
           })(
             <Input />
           )}
@@ -137,6 +140,7 @@ class RegistrationForm extends React.Component {
             }, {
               validator: this.checkConfirm,
             }],
+            validateTrigger:'onBlur',
           })(
             <Input type="password" />
           )}
@@ -152,7 +156,10 @@ class RegistrationForm extends React.Component {
             }, {
               validator: this.checkPassword,
             }],
-          })(
+            validateTrigger:'onBlur',
+          }
+        
+        )(
             <Input type="password" onBlur={this.handleConfirmBlur} />
           )}
         </FormItem>
@@ -170,6 +177,7 @@ class RegistrationForm extends React.Component {
         >
           {getFieldDecorator('nickname', {
             rules: [{ required: true, message: 'Please input your nickname!', whitespace: true }],
+            validateTrigger:'onBlur',
           })(
             <Input />
           )}

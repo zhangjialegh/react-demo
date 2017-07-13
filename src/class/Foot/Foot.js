@@ -1,3 +1,5 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { Layout,Menu,Icon,Breadcrumb } from 'antd';
 const {Footer}=Layout;
 class Foot extends React.Component{

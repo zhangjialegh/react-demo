@@ -5,7 +5,6 @@
  * 版本：1.0
  */
 
-import weatherInfo from './weatherInfo';
 import cityIds from './cityId';
 function getJsonp(city,flag,timeout) {
   let cityId='';
@@ -51,7 +50,7 @@ class CreateJsonp {
     
     this.data = {};
     this.timeout = 10000;
-    this.cb = 'callback';
+    this.cb = 'cb';
     
     Object.assign(this, opt);
   }
@@ -79,7 +78,7 @@ class CreateJsonp {
         document.body.appendChild(script);
 
         script.timer = setTimeout(function() {
-          delete window[callbackname];
+          window[callbackname] = null;;
           document.body.removeChild(script);
           reject(new Error(`The request is error!`));
         }, timeout);

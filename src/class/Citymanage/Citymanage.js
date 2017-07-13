@@ -1,5 +1,7 @@
-import { Table, Input, Icon, Button, Popconfirm } from 'antd';
-import './Citymanage.less';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Table, Input, Icon, Button, Popconfirm,message } from 'antd';
+import './Citymanage.css';
 import getJsonp from '../../assets/script/getJsonp.js';
 import weatherCode from '../../assets/script/weatherCode.js';
 
@@ -8,11 +10,9 @@ class EditableCell extends React.Component {
     super(props)
     this.state = {
       value: this.props.value,
-      editable: false,
     }
     this.handleChange=this.handleChange.bind(this);
     this.check=this.check.bind(this);
-    this.edit=this.edit.bind(this);
   }
   
   handleChange(e)  {
@@ -25,37 +25,13 @@ class EditableCell extends React.Component {
       this.props.onChange(this.state.value);
     }
   }
-  edit ()  {
-    this.setState({ editable: true });
-  }
   render() {
-    const { value, editable } = this.state;
+    const { value } = this.state;
     return (
       <div className="editable-cell">
-        {
-          editable ?
-            <div className="editable-cell-input-wrapper">
-              <Input
-                value={value}
-                onChange={this.handleChange}
-                onPressEnter={this.check}
-              />
-              <Icon
-                type="check"
-                className="editable-cell-icon-check"
-                onClick={this.check}
-              />
-            </div>
-            :
             <div className="editable-cell-text-wrapper">
               {value || ' '}
-              <Icon
-                type="edit"
-                className="editable-cell-icon"
-                onClick={this.edit}
-              />
             </div>
-        }
       </div>
     );
   }
@@ -69,12 +45,6 @@ class Citymanage extends React.Component {
       title: 'city',
       dataIndex: 'city',
       width: '30%',
-      render: (text, record, index) => (
-        <EditableCell
-          value={text}
-          onChange={this.onCellChange(index, 'name')}
-        />
-      ),
     }, {
       title: 'weather',
       dataIndex: 'weather',
@@ -97,89 +67,78 @@ class Citymanage extends React.Component {
     }];
 
     this.state = {
-      city:'北京',
       editing:false,
       val:'',
       dataSource: [{
-        key: '-1',
+        key: 0,
         city: '',
         weather: '',
         temp: '',
       }],
-      count: 0,
+      // count: 0,
     };
-    this.onCellChange=this.onCellChange.bind(this);
     this.onDelete=this.onDelete.bind(this);
     this.handleAdd=this.handleAdd.bind(this);
     this.onEditEnter=this.onEditEnter.bind(this);
     this.textChange=this.textChange.bind(this);
-    this.changeCity=this.changeCity.bind(this);
+    this.selectCity=this.selectCity.bind(this);
   }
   
   componentDidMount(){
     
     
+    const {city}=this.props;
+    
     if(JSON.parse(localStorage.getItem('dataSource'))){
     const dataSource=JSON.parse(localStorage.getItem('dataSource'));
       this.setState({
         dataSource,
-        count:dataSource.length
       })
       
       return;
     }
     
-    if(JSON.parse(localStorage.getItem('anotherData'))){
-    const localData=JSON.parse(localStorage.getItem('anotherData'));
-        if(JSON.parse(localStorage.getItem('savecity'))){
-          city=JSON.parse(localStorage.getItem('savecity'));
-        }
-    let {realtime}=localData.value[0];
-    let {sendibleTemp,wD,wS,weather}=realtime;
-    const newData = {
-      key: '0',
-      city: city,
-      weather: weather,
-      temp: sendibleTemp +'℃',
-    };
-    console.log([newData]);
-    this.setState({
-      dataSource: [newData],
-      count: 1,
-    });
+    // if(JSON.parse(localStorage.getItem('anotherData'))){
+    // const localData=JSON.parse(localStorage.getItem('anotherData'));
+    //     if(JSON.parse(localStorage.getItem('savecity'))){
+    //       city=JSON.parse(localStorage.getItem('savecity'));
+    //     }
+    // let {realtime}=localData.value[0];
+    // let {sendibleTemp,wD,wS,weather}=realtime;
+    // const newData = {
+    //   key: '0',
+    //   city: city,
+    //   weather: weather,
+    //   temp: sendibleTemp +'℃',
+    // };
+    // this.setState({
+    //   dataSource: [newData],
+    // });
+    // 
+    //   return;
+    // }
     
-      return;
-    }
-    
-    let {city,count}=this.state;
+    // let {count}=this.state;
     getJsonp(city,true).then((data) => {
-      if(JSON.parse(localStorage.getItem('savecity'))){
-        city=JSON.parse(localStorage.getItem('savecity'));
-      }
+      // if(JSON.parse(localStorage.getItem('savecity'))){
+      //   city=JSON.parse(localStorage.getItem('savecity'));
+      // }
       // console.log(data);
       let {realtime}=data.value[0];
       let {sendibleTemp,wD,wS,weather}=realtime;
       const newData = {
-        key: count,
+        key: 0,
         city: city,
         weather: weather,
         temp: sendibleTemp +'℃',
       };
-      console.log([newData]);
       this.setState({
-        dataSource: [newData],
-        count: count + 1,
+        dataSource: [newData]
       });
     })
   }
-  onCellChange  (index, key)  {
-    return (value) => {
-      const dataSource = [...this.state.dataSource];
-      dataSource[index][key] = value;
-      this.setState({ dataSource });
-    };
-  }
-  onDelete  (index) {
+
+  onDelete  (index,e) {
     const dataSource = [...this.state.dataSource];
     dataSource.splice(index, 1);
     localStorage.setItem('dataSource',JSON.stringify([...dataSource]));
@@ -191,20 +150,31 @@ class Citymanage extends React.Component {
     this.setState({
       editing:true
     })
-  
   }
-
+componentDidUpdate(){
+  document.querySelector('.addcity-input').focus();
+}
 onEditEnter(e){
-  if(e.keyCode !== 13 && e.keyCode !== 27) return;
-  let {val} = this.state;
-  const { count, dataSource,editing } = this.state;
-
+  
+  if(e.keyCode===27){
+    this.setState({
+      editing:false,
+    })
+    return;
+  }
+  if(e.keyCode !== 13) return;
+  const { val,dataSource,editing } = this.state;
+   if(val===''){
+     message.warning('The name of city can not be empty!');
+     return;
+   }
+   
+  
   getJsonp(val,true).then((data) => {
-    console.log(data);
     let {realtime}=data.value[0];
     let {sendibleTemp,wD,wS,weather}=realtime;
     const newData = {
-      key: count,
+      key: new Date().getTime(),
       city: val,
       weather: weather,
       temp: sendibleTemp + '℃',
@@ -215,7 +185,6 @@ onEditEnter(e){
     
     this.setState({
       dataSource: [...dataSource, newData],
-      count: count + 1,
     });
   })
   this.setState({
@@ -228,21 +197,21 @@ onEditEnter(e){
       val:e.target.value
     })
   }
-  changeCity(record, index, e){
-    let {city}=record;
+  selectCity(selectedRowKeys, selectedRows){
+    let {city}=selectedRows[0];
     getJsonp(city,true).then((data) => {
       localStorage.setItem('savecity',JSON.stringify(city));
       localStorage.setItem('anotherData',JSON.stringify(data));
       getJsonp(city).then((data) => {
-        console.log(data);
         localStorage.setItem('mainData',JSON.stringify(data));
       })
     })
   }
   render() {
     const { dataSource,editing,val } = this.state;
-    const {textChange,handleAdd,onEditEnter,changeCity}=this;
+    const {textChange,handleAdd,onEditEnter,selectCity}=this;
     const columns = this.columns;
+    const {city,changeCity,selectKey}=this.props;
     return (
       <div>
         <div className={editing?"add-container edit":"add-container"}>
@@ -253,9 +222,15 @@ onEditEnter(e){
           onKeyDown={onEditEnter}
         />
         </div>
-        <Table showHeader={false} pagination={false} dataSource={dataSource} columns={columns} className="table-list" 
-        onRowClick={(record, index, e) => {
-          changeCity(record, index, e);
+        <Table rowSelection={{
+          type:'radio',
+          selectedRowKeys:selectKey,
+          onChange(selectedRowKeys, selectedRows){
+              changeCity(selectedRowKeys,selectedRows);
+            }
+        }} showHeader={false} pagination={false} dataSource={dataSource} columns={columns} className="table-list" 
+        onRowDoubleClick={(record, index, e) => {
+          ;
         }}
         />
       </div>

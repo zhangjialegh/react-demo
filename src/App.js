@@ -1,12 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Routers from './Routers';
-import dataUpdate from './assets/script/timeManage.js';
+import Routers from './class/Router/Routers';
+// import dataUpdate from './assets/script/timeManage';
 // dataUpdate();
 ReactDOM.render(
-  
-    <Routers/>
-  ,
+  <Routers/>,
  document.getElementById('root'));
  
  

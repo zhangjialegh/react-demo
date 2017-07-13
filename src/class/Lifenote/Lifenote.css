@@ -1,0 +1,52 @@
+.indexes .indexes-item {
+  height: 314px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+  margin: 10px 5px;
+  padding: 50px 0;
+  background: #fff;
+}
+.indexes .indexes-item p {
+  padding: 10px 0;
+  color: #808080;
+  font-size: 20px;
+}
+.indexes .indexeshide {
+  display: none;
+}
+.indexes .indexes-info {
+  height: 314px;
+  display: none;
+  margin: 10px 5px;
+  padding: 50px 20px;
+  background-color: #fff ;
+}
+.indexes .indexes-info h1 {
+  color: #f00;
+}
+.indexes .indexes-info h1 + p {
+  font-size: 16px;
+}
+.indexes .indexes-info div {
+  display: flex;
+  justify-content: space-between;
+}
+.indexes .indexes-info div div {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.indexes .indexesshow {
+  display: block;
+}
+.indexes-box {
+  position: relative;
+}
+.indexes-box .ex-switch {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}

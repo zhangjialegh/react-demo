@@ -1,6 +1,7 @@
-import axios from 'axios';
-import { Card,Input,Row,Col } from 'antd';
-import './Lifenote.less';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Card,Input,Row,Col,Switch } from 'antd';
+import './Lifenote.css';
 import getJsonp from '../../assets/script/getJsonp';
 
 class Lifenote extends React.Component{
@@ -31,42 +32,42 @@ class Lifenote extends React.Component{
     }
 
     componentWillMount(){
-      let {city}=this.state;
+      const {city}=this.props;
       
-      if(localStorage.getItem('anotherData')){
-          const localData=JSON.parse(localStorage.getItem('anotherData'));
-            
-            if(JSON.parse(localStorage.getItem('savecity'))){
-              console.log('读取到本地数据了anotherData');
-              city=JSON.parse(localStorage.getItem('savecity'));
-            }
-            
-            
-            let {indexes,realtime}=localData.value[0];
-            this.renderData(city,indexes,realtime);
-            return;
-           }
+      // if(localStorage.getItem('anotherData')){
+      //     const localData=JSON.parse(localStorage.getItem('anotherData'));
+      //       
+      //       if(JSON.parse(localStorage.getItem('savecity'))){
+      //         console.log('读取到本地数据了anotherData');
+      //         city=JSON.parse(localStorage.getItem('savecity'));
+      //       }
+      //       
+      //       
+      //       let {indexes,realtime}=localData.value[0];
+      //       this.renderData(city,indexes,realtime);
+      //       return;
+      //      }
       
       
-           if(JSON.parse(localStorage.getItem('savecity'))){
-             console.log('读取到本地数据了anotherData');
-             city=JSON.parse(localStorage.getItem('savecity'));
-           }
-           
+          //  if(JSON.parse(localStorage.getItem('savecity'))){
+          //    console.log('读取到本地数据了anotherData');
+          //    city=JSON.parse(localStorage.getItem('savecity'));
+          //  }
+          //  
            
        getJsonp(city,true).then((data) => {
           //  console.log(data);
-          localStorage.setItem('anotherData',JSON.stringify(data));
+          // localStorage.setItem('anotherData',JSON.stringify(data));
 
            let {indexes,realtime}=data.value[0];
            this.renderData(city,indexes,realtime);
        })
     }
     renderData(city,indexes,realtime){
-      let {indexesData,realtimeData}=this.state;
+    //   let {indexesData,realtimeData}=this.state;
       
       //-----------生活小贴士--------------------
-      let {pp,gm,xc,ct,uv,yd}=indexesData;
+      let pp,gm,xc,ct,uv,yd;
        pp={
            content:indexes[0].content,
            level:indexes[0].level,
@@ -97,14 +98,14 @@ class Lifenote extends React.Component{
            level:indexes[5].level,
            name:indexes[5].name,
        }
-       indexesData={pp,gm,xc,ct,uv,yd};
+      let indexesData={pp,gm,xc,ct,uv,yd};
        
        //-----------天气状况-------------------
        let {sD,wD,wS,temp,weather}=realtime;
        
-       realtimeData={sD,wD,wS,temp,weather};
+       let realtimeData={sD,wD,wS,temp,weather};
        //-----------------------------------
-    this.setState({city,indexesData,realtimeData});   
+    this.setState({indexesData,realtimeData});   
 
     }
     switchChange(checked,value){
@@ -115,7 +116,8 @@ class Lifenote extends React.Component{
     }
     render(){
         let {switchChange}=this;
-        let {city,indexesData,realtimeData,checked,value}=this.state;
+        let {indexesData,realtimeData,checked,value}=this.state;
+        const {city}=this.props;
         console.log(city);
         let {pp,gm,xc,ct,uv,yd}=indexesData,
             {sD,wD,wS,temp,weather}=realtimeData;

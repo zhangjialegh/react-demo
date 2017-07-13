@@ -1,4 +1,5 @@
-
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { Card,Row,Col,Carousel,Input,Alert,Select } from 'antd';
 import './Main.css'
 import echarts from 'echarts';
@@ -12,7 +13,6 @@ class Main extends React.Component{
   constructor(props) {
     super(props);
     this.state={
-        city:'北京',
         optionV:'aqi',
         nowHM:'',
         currentData:{
@@ -61,27 +61,27 @@ class Main extends React.Component{
    this.createMoncharts=this.createMoncharts.bind(this);
   }
 componentDidMount(){
-    let {city,nowHM}=this.state;
-    
-    if(localStorage.getItem('mainData')){
-        const localData=JSON.parse(localStorage.getItem('mainData'));
-          let {current,yesterday,forecastDaily,aqi,indices}=localData;
-          
-          
-          if(JSON.parse(localStorage.getItem('savecity'))){
-            console.log('读取到本地数据了main');
-            city=JSON.parse(localStorage.getItem('savecity'));
-          }
-          
-          this.createMoncharts(city,current,yesterday,forecastDaily,aqi,indices);
-          
-          return;
-         }
+    let {nowHM}=this.state;
+    const {city}=this.props;
+    // if(localStorage.getItem('mainData')){
+    //     const localData=JSON.parse(localStorage.getItem('mainData'));
+    //       let {current,yesterday,forecastDaily,aqi,indices}=localData;
+    //       
+    //       
+    //       if(JSON.parse(localStorage.getItem('savecity'))){
+    //         console.log('读取到本地数据了main');
+    //         city=JSON.parse(localStorage.getItem('savecity'));
+    //       }
+    //       
+    //       this.createMoncharts(city,current,yesterday,forecastDaily,aqi,indices);
+    //       
+    //       return;
+    //      }
          
          
           getJsonp(city).then((data) => {
-           localStorage.setItem('mainData',JSON.stringify(data));
-           localStorage.setItem('savecity',JSON.stringify(city));
+          //  localStorage.setItem('mainData',JSON.stringify(data));
+          //  localStorage.setItem('savecity',JSON.stringify(city));
           let {current,yesterday,forecastDaily,aqi,indices}=data;
           this.createMoncharts(city,current,yesterday,forecastDaily,aqi,indices);
       })
@@ -236,9 +236,9 @@ this.myChartTemp=echarts.init(this.refs.temp,{width:'auto',height:'auto'});
 
 //  myChartAir.setOption(optionAir);
   this.myChartTemp.setOption(this.optionTemp);
-window.onresize=() => {
-  this.myChartTemp.resize();
-}
+  window.addEventListener('resize',() => {
+    this.myChartTemp.resize();
+  })
 this.myChartTemp.resize();
 }
 
@@ -316,11 +316,11 @@ switch (optionV) {
 
 
     return (
-    <div style={{backgroundColor:'rgb(213, 213, 213)',padding:'10px 5px'}}>
+    <div style={{backgroundColor:'rgb(213, 213, 213)',padding:'0 10px 15px 10px'}}>
         <Row>
-            <Col md={16} sm={24}>
-            <Row type="flex" justify="space-around" align="center" style={{marginTop:10}}>
-            <Col md={11} sm={11} xs={24} className="time-card">
+            <Col md={14} sm={24}>
+            <Row type="flex" justify="space-between" align="center" style={{margin:'10px 10px 0 0'}}>
+            <Col md={12} sm={12} xs={24} className="time-card">
                <div className="card-left">
                    <div className="weather-pic" style={{backgroundImage: `url(${nowWeatherImage})`}}>
                    </div>
@@ -365,7 +365,7 @@ switch (optionV) {
               </Col>
           </Row>
             </Col>
-            <Col md={8} sm={24}>
+            <Col md={10} sm={24}>
                 <Card className="search-card">
                     <h2 style={{padding:10}}>{city}</h2>
                     <Carousel autoplay dots={false} className="flash-box">
@@ -391,10 +391,11 @@ switch (optionV) {
                         <Option value="so2">SO2</Option>
                     </Select>
                     <p style={{fontSize:20,fontWeight:500,padding:10}}>{aqiValue}</p>
-                    <Alert style={{padding:10}} message={message} type="info" />
+                    <p style={{padding:10}}>{message}</p>
+                    {/* <Alert style={{padding:10}} message={message} type="info" /> */}
                 </Card>
             </Col>
-           <Col md={8} sm={24} className="indices">
+           <Col md={10} sm={24} className="indices">
            <Row>
                <Col md={8} sm={12} xs={24}>
                <div className="indices-item"> 
@@ -437,7 +438,7 @@ switch (optionV) {
            </Col>
         </Row>
 
-           <Row type="flex" justify="space-between" align="middle">
+           {/* <Row type="flex" justify="space-between" align="middle">
               <Col xs={24} sm={12} md={6} style={{padding:5}}>
                   <Card title={<p><span style={{display:'inline-block',width:'26px',height:'26px',background:`url(${require('../../assets/imgs/PM2.5.png')}) no-repeat center center`,backgroundSize:'contain',verticalAlign:'middle'}} ></span>   {pm25}μg/m³</p>} bordered={true}>
                        <p>{pm25Desc}</p>
@@ -458,7 +459,7 @@ switch (optionV) {
                     <p>{so2Desc}</p>
                     </Card>
               </Col>
-           </Row>
+           </Row> */}
 
          
     </div>

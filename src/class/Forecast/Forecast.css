@@ -8,6 +8,7 @@
 }
 .forecast-card {
   position: relative;
+  margin: 0 20px;
 }
 .forecast-card .forecast-pos {
   position: absolute;

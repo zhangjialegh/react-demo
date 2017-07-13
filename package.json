@@ -39,6 +39,7 @@
     "echarts": "^3.6.2",
     "less-loader": "^4.0.4",
     "prop-types": "^15.5.10",
+    "rc-queue-anim": "^1.0.5",
     "react": "^15.6.1",
     "react-color": "^2.13.0",
     "react-dom": "^15.6.1",
