@@ -1,5 +1,9 @@
 import axios from 'axios';
+<<<<<<< HEAD
 import { Card,Input,Row,Col,Switch } from 'antd';
+=======
+import { Card,Input,Row,Col } from 'antd';
+>>>>>>> 24668c80f0233e4a64733547c4ea37b53babb1a1
 import './Lifenote.less';
 import getJsonp from '../../assets/script/getJsonp';
 
