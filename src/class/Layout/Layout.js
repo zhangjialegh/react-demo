@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import { Layout } from 'antd';
 const {Sider}=Layout;
-import './Layout.css';
+import './Layout.less';
 import Struct from '../Struct/Struct';
 import Side from '../Side/Side';
 import {Route} from 'react-router-dom';

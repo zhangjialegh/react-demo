@@ -5,6 +5,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackNotifier = require('webpack-notifier');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const lessToJs = require('less-vars-to-js');
+const themeVariables=lessToJs(fs.readFileSync(path.resolve(__dirname, '../../src/assets/style/theme.less'), 'utf8'));
+
+
+
 
 const base = require('./base.js');
 
@@ -26,7 +31,7 @@ module.exports = {
         include: base.srcPath,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: {loader: 'css-loader', options: {minimize: true, modules: false, localIdentName: '[name]__[local]__[hash:base64:5]'}}
+          use: {loader: 'css-loader', options: {minimize: true, modules: true, localIdentName: '[name]__[local]__[hash:base64:5]'}}
         })
       },
       {
@@ -34,22 +39,23 @@ module.exports = {
         include: base.libPath,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: {loader: 'css-loader', options: {modules: false}}
+          use: {loader: 'css-loader', options: {modules: true}}
         })
       },
-      // {
-      //   test: /\.less$/,
-      //   use: [
-      //     require.resolve('style-loader'),
-      //     require.resolve('css-loader'),
-      //     {
-      //       loader: require.resolve('less-loader'),
-      //       options: {
-      //         modifyVars:themeVariables,
-      //       },
-      //     },
-      //   ],
-      // },
+      {
+        test: /\.less$/,
+        include:base.srcPath,
+        use: [
+          require.resolve('style-loader'),
+          require.resolve('css-loader'),
+          {
+            loader: require.resolve('less-loader'),
+            options: {
+              modifyVars:themeVariables,
+            },
+          },
+        ],
+      },
       {
         test: /\.jsx?$/,
         include: base.srcPath,
@@ -85,7 +91,7 @@ module.exports = {
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'common',
-      minChunks: false
+      minChunks: true
     }),
     new webpack.ProvidePlugin({
         React: 'react',

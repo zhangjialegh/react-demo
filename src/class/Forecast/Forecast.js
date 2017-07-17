@@ -1,8 +1,8 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Button,Spin,Card,Input,Row,Col } from 'antd';
-import './Forecast.css';
+import { Button,Spin,Card,Input,Row,Col,Modal } from 'antd';
+import './Forecast.less';
 import echarts from 'echarts';
 import getJsonp from '../../assets/script/getJsonp';
 import windSwitch from '../../assets/script/windSwitch';
@@ -19,6 +19,7 @@ class Forecast extends React.Component{
    }
    
    this.set=this.set.bind(this);
+   this.showModal=this.showModal.bind(this);
   //  this.handleChange=this.handleChange.bind(this);
   //  this.textChange=this.textChange.bind(this);
   }
@@ -42,6 +43,7 @@ componentDidMount(){
        
   // if(city!=='')  return;
   getJsonp(city).then((data) => {
+  console.log(data);
     let {forecastDaily}=data;
     this.set(city,forecastDaily);
   });
@@ -64,14 +66,65 @@ this.setState({cityName:city,forecastDaily})
 //                           });
 //   //  this.setState({city:''})                         
 // }
+   showModal(e){
+     const clickDate=e.target.innerHTML;
+     const cityData=JSON.parse(localStorage.getItem('cityData'));
+     let {aqi,precipitationProbability,sunRiseSet,temperature,weather,wind}=cityData.forecastDaily;
+     let clickObj,weatherDate;
+     sunRiseSet.value.forEach((item,i) => {
+       const patt=/\-(\d\d)\T/;
+       const date=item.from.match(patt)[1];
+       if(clickDate===date){
+         const sunRise=sunRiseSet.value[i].from.match(/\T(\S*)\+/)[1];
+         const sunDown=sunRiseSet.value[i].to.match(/\T(\S*)\+/)[1];
+         weatherDate=sunRiseSet.value[i].from.match(/^(\S*)\T/)[1];
+         clickObj={
+           aqiC:aqi.value[i],
+           precipitationProbabilityC:precipitationProbability.value[i%5],
+           sunRise,
+           sunDown,
+           Maxtemp:temperature.value[i].from + '℃',
+           weatherC:weatherCode(weather.value[i].from),
+           Mintemp:temperature.value[i].to + '℃',
+           directionC:windSwitch(wind.direction.value[i].from),
+           speedC:wind.speed.value[i].from+'km/h',
+         }
+       }
+     })
+     console.log(clickObj);
+     let {aqiC,precipitationProbabilityC,sunRise,sunDown,weatherC,Maxtemp,Mintemp,directionC,speedC}=clickObj;
+     Modal.info({
+       title: `${weatherDate}`,
+       content: (
+         <div className="modal-info">
+           <p><span>天气状况:</span>  {weatherC}</p>
+           <p><span>空气质量指数:</span>  {aqiC}</p>
+           <p><span>最高气温:</span>  {Maxtemp}</p>
+           <p><span>最低气温:</span>  {Mintemp}</p>
+           <p><span>降水概率:</span>  {precipitationProbabilityC}</p>
+           <p><span>风向:</span>  {directionC}</p>
+           <p><span>风力:</span>  {speedC}</p>
+           <p><span>日出时间:</span>  {sunRise}</p>
+           <p><span>日落时间:</span>  {sunDown}</p>
+         </div>
+       ),
+       maskClosable:true,
+       cancelText:'',
+     });
+   }
+
   render(){
-    let {set,handleChange,textChange}=this;
+    let {set,handleChange,textChange,showModal}=this;
     let {cityName,forecastDaily}=this.state;
     // let cards,code,txt,time=new Date().getHours();
     let cards,timeNow=new Date().getHours(),weatherV,windd,winds,weatherI,forecastDate;
     if(forecastDaily!==''){
       // console.log(basic,daily_forecast);
       let {aqi,sunRiseSet,temperature,weather,wind}=forecastDaily;
+      
+      
+      
+      
        cards=temperature.value.slice(1,7).map((item,i) => {
         // let {date,img,wd,weather,week,ws,temp_day_c,temp_night_c,sun_down_time,sun_rise_time}=item;
         
@@ -103,13 +156,18 @@ this.setState({cityName:city,forecastDaily})
         let bkColor=`rgb(${Math.round(Math.random()*75+125)},${Math.round(Math.random()*75+125)},${Math.round(Math.random()*75+125)})`;
         forecastDate=sunRiseSet.value[i].from.split('T')[0].split('-')[2];
         return (
-                  <Col key={i} md={7} sm={7} xs={18} style={{margin:'0 0 10px 0'}}>
+                  <Col key={i} md={7} sm={7} xs={18} style={{margin:'0 0 10px 0'}}
+                    
+                    >
                     <Card style={{background:bkColor,borderRadius:'10px'}}
                     className="forecast-card"
+                    
                     >
                     <p className="forecast-pos"><img src={require('../../assets/imgs/pos.png')} alt=""/>{cityName}</p>
 
-                     <p className="forecast-date">{forecastDate}<span>日</span></p>
+                     <p className="forecast-date"><span
+                       onClick={showModal}
+                       >{forecastDate}</span><span>日</span></p>
                     <div className="forecast-weather"><p style={{backgroundImage:`url(${urlImage})`}}></p></div>
                     <p className="forecast-temp">{tempH}/{tempL}℃</p>
 

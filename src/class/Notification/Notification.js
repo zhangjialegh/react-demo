@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { notification } from 'antd';
-import './Notification.css';
+import './Notification.less';
 import getJsonp from '../../assets/script/getJsonp';
 
 class Notification extends React.Component {

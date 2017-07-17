@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Table, Input, Icon, Button, Popconfirm,message } from 'antd';
-import './Citymanage.css';
+import './Citymanage.less';
 import getJsonp from '../../assets/script/getJsonp.js';
 import weatherCode from '../../assets/script/weatherCode.js';
 

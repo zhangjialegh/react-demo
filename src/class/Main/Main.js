@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Card,Row,Col,Carousel,Input,Alert,Select } from 'antd';
-import './Main.css'
+import './Main.less'
 import echarts from 'echarts';
 import 'echarts/lib/chart/line'
 import weatherCode from '../../assets/script/weatherCode';
@@ -63,25 +63,17 @@ class Main extends React.Component{
 componentDidMount(){
     let {nowHM}=this.state;
     const {city}=this.props;
-    // if(localStorage.getItem('mainData')){
-    //     const localData=JSON.parse(localStorage.getItem('mainData'));
+    // if(localStorage.getItem('cityData')){
+    //     const localData=JSON.parse(localStorage.getItem('cityData'));
     //       let {current,yesterday,forecastDaily,aqi,indices}=localData;
-    //       
-    //       
-    //       if(JSON.parse(localStorage.getItem('savecity'))){
-    //         console.log('读取到本地数据了main');
-    //         city=JSON.parse(localStorage.getItem('savecity'));
-    //       }
     //       
     //       this.createMoncharts(city,current,yesterday,forecastDaily,aqi,indices);
     //       
     //       return;
     //      }
-         
-         
+         //-----------------------------------
           getJsonp(city).then((data) => {
-          //  localStorage.setItem('mainData',JSON.stringify(data));
-          //  localStorage.setItem('savecity',JSON.stringify(city));
+           localStorage.setItem('cityData',JSON.stringify(data));
           let {current,yesterday,forecastDaily,aqi,indices}=data;
           this.createMoncharts(city,current,yesterday,forecastDaily,aqi,indices);
       })

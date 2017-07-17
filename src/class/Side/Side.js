@@ -36,7 +36,7 @@ class Side extends React.Component{
                collapsed={collapsed}
               onCollapse={onCollapse}
         >
-          <div className="logo" style={{backgroundColor:'#d62020'}}/>
+          <div className="logo"/>
           <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
             {/* <SubMenu key="sub1" title={<span><Icon type="user"/><span className="nav-text">User</span></span>}
             onClick={click}
@@ -45,6 +45,7 @@ class Side extends React.Component{
             <Menu.Item key='2' ><Link to="/layout/forecast"><Icon type='cloud-o'/><span>预报天气</span></Link></Menu.Item>
             <Menu.Item key='3' ><Link to="/layout/hoursly"><Icon type='calendar'/><span>24小时天气</span></Link></Menu.Item>
             <Menu.Item key='4' ><Link to="/layout/lifenote"><Icon type='heart-o'/><span>生活小贴士</span></Link></Menu.Item>
+            <Menu.Item key='5' ><Link to="/layout/todo"><Icon type="file-text" /><span>todos</span></Link></Menu.Item>
             {/* </SubMenu> */}
 
             {/* <SubMenu key="sub2" title={<span><Icon type="team"/><span className="nav-text">Team</span></span>}

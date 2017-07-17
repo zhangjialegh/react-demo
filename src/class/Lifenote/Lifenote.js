@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Card,Input,Row,Col,Switch } from 'antd';
-import './Lifenote.css';
+import './Lifenote.less';
 import getJsonp from '../../assets/script/getJsonp';
 
 class Lifenote extends React.Component{

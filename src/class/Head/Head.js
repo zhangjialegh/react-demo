@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Layout,Avatar,Menu,Dropdown,Icon} from 'antd';
 import {BrowserRouter as Router,Route,Link} from 'react-router-dom';
 const {Header}=Layout;
-import './head.css';
+import './head.less';
 
 class Head extends React.Component{
     constructor(props) {

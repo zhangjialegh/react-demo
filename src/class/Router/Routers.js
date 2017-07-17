@@ -9,7 +9,7 @@ import Layouter from '../Layout/Layout';
 import Regist from '../Regist/Regist';
 import Login from '../Login/Login';
 // import Page from './Page';
-import {BrowserRouter as Router,Route,IndexRedirect,Switch,Redirect,hashHistory} from 'react-router-dom';
+import {BrowserRouter as Router,Route,IndexRedirect,Switch,Redirect} from 'react-router-dom';
 // import {IndexRedirect} from 'react-router';
 //https://reacttraining.cn/web/api/StaticRouter/context-object
 class Routers extends React.Component{
@@ -24,11 +24,22 @@ class Routers extends React.Component{
     this.loggedIn=this.loggedIn.bind(this);
     this.outLoggedin=this.outLoggedin.bind(this);
   }
+  componentWillMount(){
+    if(localStorage.getItem('login')){
+      const {login}=JSON.parse(localStorage.getItem('login'));
+      // console.log(login);
+      this.setState({
+        login
+      })
+    }
+  }
   loggedIn(){
-    this.setState({login:true})
+    this.setState({login:true});
+    localStorage.setItem('login',JSON.stringify({login:true}))
   }
   outLoggedin(){
-    this.setState({login:false})
+    this.setState({login:false});
+    localStorage.setItem('login',JSON.stringify({login:false}))
   }
   changeCity(selectKey,obj){
     
@@ -54,7 +65,7 @@ class Routers extends React.Component{
     const city=cityName;
     console.log(login);
     return (
-      <Router history={hashHistory}>
+      <Router>
         <Switch>
         {/* <Route exact path="/" component={Page}></Route> */}
           <Route exact path='/' render={() =>(login?(<Redirect from="/" to="/layout/main"/>):(<Login loggedIn={loggedIn}/>))} />

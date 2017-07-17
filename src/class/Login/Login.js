@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Form, Icon, Input, Button, Checkbox,message } from 'antd';
-import './Login.css';
+import './Login.less';
 import {BrowserRouter as Router,Route,Link} from 'react-router-dom';
 const FormItem = Form.Item;
 

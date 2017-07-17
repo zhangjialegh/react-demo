@@ -8,7 +8,7 @@ import Forecast from '../Forecast/Forecast';
 import Hoursly from '../Hoursly/Hoursly';
 import Lifenote from '../Lifenote/Lifenote';
 import Citymanage from '../Citymanage/Citymanage';
-
+import Todos from '../Todo/Todos';
 import {Link,Route} from 'react-router-dom';
 const {Content}=Layout;
 
@@ -33,6 +33,7 @@ constructor(props){
                  <Route path="/layout/hoursly" render={() =><Hoursly city={city} />}></Route>
                  <Route path="/layout/lifenote" render={() =><Lifenote city={city} />}></Route>
                  <Route path="/layout/citymanage" render={() =><Citymanage city={city} selectKey={selectKey} changeCity={changeCity}/>}></Route>
+                 <Route path="/layout/todo" render={() =><Todos />}></Route>
              </Content>
             
         );

@@ -28,12 +28,15 @@
     }
     .forecast-date{
         padding: 5px 0;
-        font-size: 26px;
-        font-weight: 600;
         font-family: '幼圆';
         text-align: center;
         color: #fff;
-        span{
+        span:nth-of-type(1){
+          font-size: 26px;
+          font-weight: 600;
+          cursor: pointer;
+        }
+        span:nth-of-type(2){
           font-size: 16px;
           font-weight: 500;
         }
@@ -104,4 +107,15 @@
 .forecast-rise{
     padding-top: 30px;
 }
+}
+.modal-info{
+  p{
+    
+    padding: 10px 0;
+    font-size: 14px;
+    font-weight: 500;
+    span{
+      font-size: 16px;
+    }
+  }
 }

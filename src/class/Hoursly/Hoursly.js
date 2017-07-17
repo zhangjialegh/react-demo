@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Button,Spin,Card,Input,Row,Col,Table } from 'antd';
-import './Hoursly.css';
+import './Hoursly.less';
 import echarts from 'echarts';
 import getJsonp from '../../assets/script/getJsonp';
 import windSwitch from '../../assets/script/windSwitch';
