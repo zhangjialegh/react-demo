@@ -42,7 +42,6 @@ componentDidMount(){
        
   // if(city!=='')  return;
   getJsonp(city).then((data) => {
-  console.log(data);
     let {forecastDaily}=data;
     this.set(city,forecastDaily);
   });
@@ -88,7 +87,6 @@ this.setState({cityName:city,forecastDaily})
          }
        }
      })
-     console.log(clickObj);
      let {aqiC,precipitationProbabilityC,sunRise,sunDown,weatherC,Maxtemp,Mintemp,directionC,speedC}=clickObj;
      Modal.info({
        title: `${weatherDate}`,

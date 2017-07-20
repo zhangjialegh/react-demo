@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Form, Icon, Input, Button, Checkbox,message } from 'antd';
 import './Login.less';
-import {BrowserRouter as Router,Route,Link} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 const FormItem = Form.Item;
 
 class NormalLoginForm extends React.Component {
@@ -10,13 +10,8 @@ class NormalLoginForm extends React.Component {
     super(props);
     this.handleSubmit=this.handleSubmit.bind(this);
   }
-  componentWillMount(){
-    // console.log(this.props);
-  }
   handleSubmit (e)  {
     e.preventDefault();
-    // let history=this.props.history;
-    console.log(this.props);
     this.props.form.validateFields((err, values) => {
       if (!err) {
         let {password,userName}=values;
@@ -26,14 +21,11 @@ class NormalLoginForm extends React.Component {
           if(password===item.password&&userName===item.nickname){
             confirm=true;
             this.props.loggedIn();
-            setTimeout(() =>history.replaceState("layout/main",userName),500);
           }
         }
-        
         if(!confirm){
           message.info('用户名或密码错误,请重新输入!');
         }
-        // console.log('Received values of form: ', values);
       }else{
         if(JSON.parse(localStorage.getItem('registInfo'))){
           message.info('用户名或密码不能为空!');
@@ -72,7 +64,10 @@ class NormalLoginForm extends React.Component {
           <Button type="primary" htmlType="submit" className="login-form-button">
             Log in
           </Button>
-          Or <Link to="/regist">register now!</Link>
+      
+          <div>
+          Or <Link to="/regist">register</Link>
+          </div>
         </FormItem>
       </Form>
     );

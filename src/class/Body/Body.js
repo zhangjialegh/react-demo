@@ -1,5 +1,4 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+
 import { Layout,Menu,Icon,Breadcrumb } from 'antd';
 import Login from '../Login/Login';
 import Regist from '../Regist/Regist';
@@ -35,13 +34,13 @@ updateTodos(todos){
       const {updateTodos}=this;
         return (
               <Content style={{margin:'10px 16px',position:'relative'}}>
-                 <Route path="/layout/main" render={() =><Main city={city} />}></Route> 
-                 <Route path="/layout/forecast" render={() =><Forecast city={city} />}></Route>
-                 <Route path="/layout/hoursly" render={() =><Hoursly city={city} />}></Route>
-                 <Route path="/layout/lifenote" render={() =><Lifenote city={city} />}></Route>
-                 <Route path="/layout/citymanage" render={() =><Citymanage city={city} selectKey={selectKey} changeCity={changeCity}/>}></Route>
-                 <Route path="/layout/todo" render={() =><Todos updateTodos={updateTodos}/>}></Route>
-                 <Route path="/layout/proceed" render={() => <Proceed todos={todos}/>}/>
+                 <Route path="/main" render={() =><Main city={city} />}></Route> 
+                 <Route path="/forecast" render={() =><Forecast city={city} />}></Route>
+                 <Route path="/hoursly" render={() =><Hoursly city={city} />}></Route>
+                 <Route path="/lifenote" render={() =><Lifenote city={city} />}></Route>
+                 <Route path="/citymanage" render={() =><Citymanage city={city} selectKey={selectKey} changeCity={changeCity}/>}></Route>
+                 <Route path="/todo" render={() =><Todos updateTodos={updateTodos}/>}></Route>
+                 <Route path="/proceed" render={() => <Proceed todos={todos}/>}/>
              </Content>
             
         );

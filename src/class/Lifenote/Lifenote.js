@@ -119,7 +119,6 @@ class Lifenote extends React.Component{
         let {switchChange}=this;
         let {indexesData,realtimeData,checked,value}=this.state;
         const {city}=this.props;
-        console.log(city);
         let {pp,gm,xc,ct,uv,yd}=indexesData,
             {sD,wD,wS,temp,weather}=realtimeData;
         return (

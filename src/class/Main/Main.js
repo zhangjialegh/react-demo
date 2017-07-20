@@ -108,7 +108,6 @@ temperature=temperature.value;
 let {tempMax,tempMin,weatherEnd,windDircEnd,windSpeedEnd}=yesterday;
 
 windDircEnd=windSwitch(windDircEnd);
-console.log(weatherEnd);
 let yesWeatherInfo=weatherCode(weatherEnd);
 let yesWeatherImage=require(`../../assets/imgs/${weatherEnd}.png`);
 let yesTempdiff=tempMax-tempMin;
@@ -121,7 +120,6 @@ humidity=humidity.value;
 feelsLike=feelsLike.value;
 pressure=pressure.value;
 
-console.log(uvIndex,humidity,feelsLike,pressure);
 //------------------------------------------
 let {currentData,yesterdayData,aqiData,indicesData}=this.state;
 

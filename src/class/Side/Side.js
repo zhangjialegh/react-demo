@@ -15,20 +15,55 @@ import './Side.less';
 class Side extends React.Component{
   constructor(props) {
     super(props)
-    
-    this.state={
+     this.state={
       collapsed:true,
-      key:['1'],
+      key:['0'],
     }
     this.onCollapse=this.onCollapse.bind(this);
-    this.selectedKeys=this.selectedKeys.bind(this);
+    this.matchKey=this.matchKey.bind(this);
   }
   componentWillMount(){
-    let selectKey;
-    if(selectKey=JSON.parse(localStorage.getItem('selectKey'))){
+    const {params:{id}}=this.props.match;
+    this.matchKey(id);
+  }
+  componentWillReceiveProps(nextProps) {
+        if (nextProps!=this.props) {
+          const {match:{params}}=nextProps;
+         this.matchKey(params.id);
+        }
+    }
+  matchKey(id){
+    switch (id) {
+      case 'main':
+        this.setState({
+          key:1
+        })
+        break;
+        case 'forecast':
+          this.setState({
+            key:2
+          })
+          break;
+          case 'hoursly':
+            this.setState({
+              key:3
+            })
+            break;
+            case 'lifenote':
+              this.setState({
+                key:4
+              })
+              break;   
+              case 'todo':
+                this.setState({
+                  key:5
+                })
+                break;     
+      default:
       this.setState({
-        key:selectKey
-      });
+        key:0
+      })
+        break;
     }
   }
   onCollapse(collapsed){
@@ -36,13 +71,9 @@ class Side extends React.Component{
       collapsed
     });
   }
-  selectedKeys(item){
-    const {key}=item;
-    localStorage.setItem('selectKey',JSON.stringify([`${key}`]))
-  }
     render(){
         let {collapsed,key}=this.state;
-        let {onCollapse,selectedKeys}=this;
+        let {onCollapse}=this;
         return (
              <Sider
                collapsible
@@ -50,16 +81,15 @@ class Side extends React.Component{
               onCollapse={onCollapse}
         >
           <div className="logo"/>
-          <Menu theme="dark" mode="inline" defaultSelectedKeys={key}
-            onSelect={selectedKeys}>
+          <Menu theme="dark" mode="inline" selectedKeys={[`${key}`]}>
             {/* <SubMenu key="sub1" title={<span><Icon type="user"/><span className="nav-text">User</span></span>}
             onClick={click}
             > */}
-            <Menu.Item key='1' ><Link to="/layout/main"><Icon type='home'/><span>首页</span></Link></Menu.Item>
-            <Menu.Item key='2' ><Link to="/layout/forecast"><Icon type='cloud-o'/><span>预报天气</span></Link></Menu.Item>
-            <Menu.Item key='3' ><Link to="/layout/hoursly"><Icon type='calendar'/><span>24小时天气</span></Link></Menu.Item>
-            <Menu.Item key='4' ><Link to="/layout/lifenote"><Icon type='heart-o'/><span>生活小贴士</span></Link></Menu.Item>
-            <Menu.Item key='5' ><Link to="/layout/todo"><Icon type="file-text" /><span>todos</span></Link></Menu.Item>
+            <Menu.Item key='1' ><Link to="/main"><Icon type='home'/><span>首页</span></Link></Menu.Item>
+            <Menu.Item key='2' ><Link to="/forecast"><Icon type='cloud-o'/><span>预报天气</span></Link></Menu.Item>
+            <Menu.Item key='3' ><Link to="/hoursly"><Icon type='calendar'/><span>24小时天气</span></Link></Menu.Item>
+            <Menu.Item key='4' ><Link to="/lifenote"><Icon type='heart-o'/><span>生活小贴士</span></Link></Menu.Item>
+            <Menu.Item key='5' ><Link to="/todo"><Icon type="file-text" /><span>todos</span></Link></Menu.Item>
             {/* </SubMenu> */}
 
             {/* <SubMenu key="sub2" title={<span><Icon type="team"/><span className="nav-text">Team</span></span>}

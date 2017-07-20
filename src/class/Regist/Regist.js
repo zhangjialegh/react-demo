@@ -5,7 +5,6 @@ import './Regist.less';
 const FormItem = Form.Item;
 const Option = Select.Option;
 const AutoCompleteOption = AutoComplete.Option;
-import {BrowserRouter as Router,Route,Link} from 'react-router-dom';
 
 
 class RegistrationForm extends React.Component {
@@ -45,8 +44,7 @@ class RegistrationForm extends React.Component {
         this.setState({
           registConfirm:true
         })
-        console.log(history);
-        history.push("/",null);
+        history.push("/login",null);
       }
     });
   }
@@ -83,7 +81,6 @@ class RegistrationForm extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const { autoCompleteResult} = this.state;
-    console.log(this.props);
     const formItemLayout = {
       labelCol: {
         xs: { span: 16,offset:4 },

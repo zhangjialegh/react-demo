@@ -27,7 +27,7 @@ class Proceed extends React.Component {
     })
     return(
       
-    <div className="proceed-container" style={{backgroundImage:`url(${require('../../assets/imgs/bkboard.jpg')})`}}>
+    <div className="proceed-container">
       <QueueAnim delay={300} className="demo-content">
         <div key="a" className="demo-thead proceed-finished">
           <p><Icon type="check-circle-o"/><span style={{paddingLeft:5}}>已完成</span> {com}</p>
