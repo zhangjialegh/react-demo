@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 
-import './Todobase.css';
-import './Todoindex.css';
+import './Todobase.less';
+import './Todoindex.less';
 
 import Header from './Header.js';
 import ListWrap from './ListWrap.js';
 import Footer from './Footer.js';
-
+import {Route} from 'react-router-dom';
 class Todos extends Component {
   constructor(props) {
     super(props);
@@ -25,11 +25,12 @@ class Todos extends Component {
     this.saveEditVal = this.saveEditVal.bind(this);
   }
   componentWillMount(){
-    console.log(localStorage.getItem('todos'));
     
     if(localStorage.getItem('todos')){
       const todos=JSON.parse(localStorage.getItem('todos'));
       this.setState({todos:todos});
+      let {updateTodos}=this.props;
+      updateTodos(todos);
     }
   }
   // 修改增加内容的文本
@@ -53,6 +54,8 @@ class Todos extends Component {
     });
     
     this.setState({todos, textVal: ''})
+    let {updateTodos}=this.props;
+    updateTodos(todos);
   }
   // 删除一条
   deleteOneItem(todoItem){
@@ -63,6 +66,8 @@ class Todos extends Component {
     });
     
     this.setState({todos});
+    let {updateTodos}=this.props;
+    updateTodos(todos);
   }
   // 切换完成和未完成
   toggleItem(todoItem){
@@ -82,6 +87,8 @@ class Todos extends Component {
       return !todo.done
     });
     this.setState({todos});
+    let {updateTodos}=this.props;
+    updateTodos(todos);
   }
   // 全部选中或者取消选中的操作
   toggleAllItem(e){
@@ -92,6 +99,8 @@ class Todos extends Component {
       return todo;
     });
     this.setState({todos});
+    let {updateTodos}=this.props;
+    updateTodos(todos);
   }
   // 修改显示试图操作
   changeView(view){
@@ -107,11 +116,15 @@ class Todos extends Component {
       return todo;
     });
     this.setState({todos});
+    let {updateTodos}=this.props;
+    updateTodos(todos);
   }
+
   render() {
     let {todos, textVal, view} = this.state;
+    
     let {toggleItem, changeTextVal, addOneItem, deleteOneItem, deleteAllCompleted, toggleAllItem, changeView, saveEditVal} = this;
-    localStorage.setItem('todos',JSON.stringify(todos))
+    localStorage.setItem('todos',JSON.stringify(todos));
     let todoLen = todos.length;
     let showAbleLen = todoLen;
     let [todoWrap, footer] = [null, null];
@@ -164,6 +177,7 @@ class Todos extends Component {
         {/* 如果是一个fasle值react都不会进行渲染 */}
         {todoWrap}
         {footer}
+        
       </div>
     );
   }

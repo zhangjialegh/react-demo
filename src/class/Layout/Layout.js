@@ -9,11 +9,6 @@ import Side from '../Side/Side';
 import {Route} from 'react-router-dom';
 
 
-
-
-//https://reacttraining.cn/web/api/StaticRouter/context-object
-
-
 class Layouter extends React.Component{
   constructor(props) {
     super(props);

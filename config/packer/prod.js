@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-
+const fs=require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackNotifier = require('webpack-notifier');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -22,7 +22,7 @@ module.exports = {
   output: {
     path: base.staticPath,
     filename: 'assets/[name]_[hash:5].js',
-    publicPath: base.publicPath
+    publicPath: base.ProdPath
   },
   module: {
     rules: [
@@ -44,7 +44,6 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        include:base.srcPath,
         use: [
           require.resolve('style-loader'),
           require.resolve('css-loader'),
@@ -61,7 +60,7 @@ module.exports = {
         include: base.srcPath,
         use: {loader:'babel-loader',options:{
           plugins:[
-            ['import', { libraryName: 'antd', style: 'css' }],
+            ['import', { libraryName: 'antd', style: true }],
           ],
         }}
       },

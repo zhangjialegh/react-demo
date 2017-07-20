@@ -1,14 +1,13 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Button,Spin,Card,Input,Row,Col,Modal } from 'antd';
+import { Spin,Card,Row,Col,Modal } from 'antd';
 import './Forecast.less';
 import echarts from 'echarts';
 import getJsonp from '../../assets/script/getJsonp';
 import windSwitch from '../../assets/script/windSwitch';
 import weatherCode from '../../assets/script/weatherCode';
 import QueueAnim from 'rc-queue-anim';
-const Search = Input.Search;
 
 class Forecast extends React.Component{
   constructor(props) {
@@ -48,8 +47,6 @@ componentDidMount(){
     this.set(city,forecastDaily);
   });
 }
-
-
 set(city,forecastDaily){
 this.setState({cityName:city,forecastDaily})
 }
@@ -72,12 +69,12 @@ this.setState({cityName:city,forecastDaily})
      let {aqi,precipitationProbability,sunRiseSet,temperature,weather,wind}=cityData.forecastDaily;
      let clickObj,weatherDate;
      sunRiseSet.value.forEach((item,i) => {
-       const patt=/\-(\d\d)\T/;
+       const patt=/-(\d\d)T/;
        const date=item.from.match(patt)[1];
        if(clickDate===date){
-         const sunRise=sunRiseSet.value[i].from.match(/\T(\S*)\+/)[1];
-         const sunDown=sunRiseSet.value[i].to.match(/\T(\S*)\+/)[1];
-         weatherDate=sunRiseSet.value[i].from.match(/^(\S*)\T/)[1];
+         const sunRise=sunRiseSet.value[i].from.match(/T(\S*)\+/)[1];
+         const sunDown=sunRiseSet.value[i].to.match(/T(\S*)\+/)[1];
+         weatherDate=sunRiseSet.value[i].from.match(/^(\S*)T/)[1];
          clickObj={
            aqiC:aqi.value[i],
            precipitationProbabilityC:precipitationProbability.value[i%5],
@@ -121,10 +118,7 @@ this.setState({cityName:city,forecastDaily})
     if(forecastDaily!==''){
       // console.log(basic,daily_forecast);
       let {aqi,sunRiseSet,temperature,weather,wind}=forecastDaily;
-      
-      
-      
-      
+  
        cards=temperature.value.slice(1,7).map((item,i) => {
         // let {date,img,wd,weather,week,ws,temp_day_c,temp_night_c,sun_down_time,sun_rise_time}=item;
         
@@ -187,7 +181,7 @@ this.setState({cityName:city,forecastDaily})
     <Spin size="large"/>
   </div>
     ):(
-    <div style={{backgroundColor:'#fff',padding:'10px'}}>
+    <div className="fore-container">
         <Row style={{paddingLeft:'10%'}}>
           <QueueAnim delay={300} className="queue-simple">
             {cards}

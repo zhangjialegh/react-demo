@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Card,Row,Col,Carousel,Input,Alert,Select } from 'antd';
-import './Main.less'
+import './Main.less';
 import echarts from 'echarts';
-import 'echarts/lib/chart/line'
 import weatherCode from '../../assets/script/weatherCode';
 import windSwitch from '../../assets/script/windSwitch';
 import getJsonp from '../../assets/script/getJsonp';
@@ -61,6 +60,7 @@ class Main extends React.Component{
    this.createMoncharts=this.createMoncharts.bind(this);
   }
 componentDidMount(){
+  
     let {nowHM}=this.state;
     const {city}=this.props;
     // if(localStorage.getItem('cityData')){
@@ -158,6 +158,14 @@ foreTempData.slice(0,7).forEach((item,i) => {
 
 //-------------------------------------
 this.optionTemp = {
+    title:{
+      text:`${city}未来一周气温变化`,
+      left:'2%',
+      top:'3%',
+      textStyle:{
+        fontSize:14,
+      }
+    },
     backgroundColor:'#fff',
     tooltip: {
         trigger: 'axis'
@@ -306,7 +314,7 @@ switch (optionV) {
 }
 //------------------------------------------
 
-
+//------------------------------------------------------------------
     return (
     <div style={{backgroundColor:'rgb(213, 213, 213)',padding:'0 10px 15px 10px'}}>
         <Row>
@@ -329,7 +337,6 @@ switch (optionV) {
             </Col>
 
 
-
              <Col md={11} sm={11} xs={24} className="temp-card">
                <div className="card-left">
                    <div className="weather-pic" style={{backgroundImage:`url(${yesWeatherImage})`}}>
@@ -347,10 +354,6 @@ switch (optionV) {
             </Col>
             </Row>
              <Row >
-              {/*<Col sm={24} md={12} >
-                  <div className="air-qua" ref="air">
-                  </div>
-              </Col>*/}
               <Col sm={24} md={24} >
                   <div className="temp" ref="temp">
                   </div>
@@ -384,7 +387,6 @@ switch (optionV) {
                     </Select>
                     <p style={{fontSize:20,fontWeight:500,padding:10}}>{aqiValue}</p>
                     <p style={{padding:10}}>{message}</p>
-                    {/* <Alert style={{padding:10}} message={message} type="info" /> */}
                 </Card>
             </Col>
            <Col md={10} sm={24} className="indices">
@@ -395,6 +397,7 @@ switch (optionV) {
                    <p>{nowSpeed}</p>
                </div>
                </Col>
+               
                <Col md={8} sm={12} xs={24}>
                <div className="indices-item">
                    <p ><i style={{backgroundImage:`url(${require('../../assets/imgs/humi.png')})`}}></i>  <span>空气湿度</span></p>

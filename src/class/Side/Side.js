@@ -4,7 +4,7 @@ import { Layout,Menu,Icon,Breadcrumb } from 'antd';
 import {BrowserRouter as Router,Route,Link} from 'react-router-dom';
 const {Sider}=Layout;
 const SubMenu=Menu.SubMenu;
-import './Side.css';
+import './Side.less';
 // let propTypes = {
 //   // collapsed: PT.bool,
 //   mode: PT.string,
@@ -18,18 +18,31 @@ class Side extends React.Component{
     
     this.state={
       collapsed:true,
+      key:['1'],
     }
     this.onCollapse=this.onCollapse.bind(this);
-    
+    this.selectedKeys=this.selectedKeys.bind(this);
+  }
+  componentWillMount(){
+    let selectKey;
+    if(selectKey=JSON.parse(localStorage.getItem('selectKey'))){
+      this.setState({
+        key:selectKey
+      });
+    }
   }
   onCollapse(collapsed){
     this.setState({
       collapsed
     });
   }
+  selectedKeys(item){
+    const {key}=item;
+    localStorage.setItem('selectKey',JSON.stringify([`${key}`]))
+  }
     render(){
-        let {collapsed}=this.state;
-        let {onCollapse}=this;
+        let {collapsed,key}=this.state;
+        let {onCollapse,selectedKeys}=this;
         return (
              <Sider
                collapsible
@@ -37,7 +50,8 @@ class Side extends React.Component{
               onCollapse={onCollapse}
         >
           <div className="logo"/>
-          <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+          <Menu theme="dark" mode="inline" defaultSelectedKeys={key}
+            onSelect={selectedKeys}>
             {/* <SubMenu key="sub1" title={<span><Icon type="user"/><span className="nav-text">User</span></span>}
             onClick={click}
             > */}

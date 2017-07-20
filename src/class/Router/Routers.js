@@ -8,8 +8,9 @@ import '../../assets/style/index.css';
 import Layouter from '../Layout/Layout';
 import Regist from '../Regist/Regist';
 import Login from '../Login/Login';
+import Notfound from '../Notfound/Notfound';
 // import Page from './Page';
-import {BrowserRouter as Router,Route,IndexRedirect,Switch,Redirect} from 'react-router-dom';
+import {HashRouter as Router,Route,Switch,Redirect,IndexRoute} from 'react-router-dom';
 // import {IndexRedirect} from 'react-router';
 //https://reacttraining.cn/web/api/StaticRouter/context-object
 class Routers extends React.Component{
@@ -26,8 +27,16 @@ class Routers extends React.Component{
   }
   componentWillMount(){
     if(localStorage.getItem('login')){
-      const {login}=JSON.parse(localStorage.getItem('login'));
-      // console.log(login);
+      const {login}=JSON.parse(localStorage.getItem('login'))
+      if(localStorage.getItem('cityKey')){
+        const {city,selectKey}=JSON.parse(localStorage.getItem('cityKey'))
+        this.setState({
+          cityName:city,
+          login,
+          selectKey
+        })
+        return;
+      }
       this.setState({
         login
       })
@@ -44,16 +53,7 @@ class Routers extends React.Component{
   changeCity(selectKey,obj){
     
     let {city}=obj[0];
-    
-
-    
-    // getJsonp(city,true).then((data) => {
-    //   // localStorage.setItem('savecity',JSON.stringify(city));
-    //   // localStorage.setItem('anotherData',JSON.stringify(data));
-    //   getJsonp(city).then((data) => {
-    //     localStorage.setItem('mainData',JSON.stringify(data));
-    //   })
-    // })
+    localStorage.setItem('cityKey',JSON.stringify({city,selectKey}));
     this.setState({
       cityName:city,
       selectKey
@@ -63,16 +63,22 @@ class Routers extends React.Component{
     const {cityName,selectKey,login}=this.state;
     const {changeCity,addressprev,loggedIn,outLoggedin}=this;
     const city=cityName;
-    console.log(login);
+    console.log(city);
     return (
       <Router>
         <Switch>
-        {/* <Route exact path="/" component={Page}></Route> */}
           <Route exact path='/' render={() =>(login?(<Redirect from="/" to="/layout/main"/>):(<Login loggedIn={loggedIn}/>))} />
+          {/* <Redirect from='/' to='/login' />
+          <Route path='/login' render={() => <Login loggedIn={loggedIn} />} /> */}
           <Route path="/regist" component={Regist}/>
-          <Route path="/layout" render={() => (
+          <Route path="/layout/:id" render={() => (
             login?(<Layouter city={city} selectKey={selectKey} outLoggedin={outLoggedin} changeCity={changeCity}/>):(<Redirect to="/"/>)
           )} />
+          {/* <Redirect to="/404" /> */}
+          {/* <Route path='/404' component={Notfound} /> */}
+          
+          <Route path='/404' component={Notfound} />
+          <Redirect from='*' to='/404' />
         </Switch>
       </Router>
     );

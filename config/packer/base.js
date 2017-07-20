@@ -2,6 +2,7 @@ const path = require('path');
 
 module.exports = {
   publicPath: '/',
+  ProdPath:'./',
   staticPath: path.resolve(process.cwd(), 'dist'),
   rootPath: process.cwd(),
   srcPath: path.resolve(process.cwd(), 'src'),

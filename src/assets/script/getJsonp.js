@@ -21,12 +21,7 @@ let url=`https://weatherapi.market.xiaomi.com/wtr-v3/weather/all?latitude=110&lo
 if(flag){
   url=`http://aider.meizu.com/app/weather/listWeather?cityIds=${cityId}`;
 }
-// let  url=`http://aider.meizu.com/app/weather/listWeather?cityIds=${cityId}`;
-            // url+='?';
-            // for (var key in data) {
-            //     url+=`${key}=${data[key]}&`;
-            // }
-            // url=url.slice(0,-1);
+
             url = encodeURIComponent(url);
             return fetch({
                     url: 'http://wehiking.com/jsonp.php',
@@ -61,7 +56,7 @@ class CreateJsonp {
       then(resolve, reject){
         const script = document.createElement('script');
         
-        let callbackname = 'cb' + Date.now();
+        let callbackname = 'cb';
         
         data[cb] = callbackname;
         
@@ -78,7 +73,7 @@ class CreateJsonp {
         document.body.appendChild(script);
 
         script.timer = setTimeout(function() {
-          window[callbackname] = null;;
+          window[callbackname] = null;
           document.body.removeChild(script);
           reject(new Error(`The request is error!`));
         }, timeout);

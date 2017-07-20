@@ -25,9 +25,11 @@ class Notification extends React.Component {
       }
     })
   }
-  componentDidMount(){
+  componentWillMount(){
    const {city}=this.props;
-   this.popNotification(city);
+   setTimeout(() => {
+     this.popNotification(city);
+   },500)
   }
   
   componentWillReceiveProps(nextProps){

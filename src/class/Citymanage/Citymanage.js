@@ -81,15 +81,11 @@ class Citymanage extends React.Component {
     this.handleAdd=this.handleAdd.bind(this);
     this.onEditEnter=this.onEditEnter.bind(this);
     this.textChange=this.textChange.bind(this);
-    this.selectCity=this.selectCity.bind(this);
   }
   
-  componentDidMount(){
-    
-    
+  componentWillMount(){
     const {city}=this.props;
-    
-    if(JSON.parse(localStorage.getItem('dataSource'))){
+    if(localStorage.getItem('dataSource')){
     const dataSource=JSON.parse(localStorage.getItem('dataSource'));
       this.setState({
         dataSource,
@@ -119,23 +115,22 @@ class Citymanage extends React.Component {
     // }
     
     // let {count}=this.state;
-    getJsonp(city,true).then((data) => {
-      // if(JSON.parse(localStorage.getItem('savecity'))){
-      //   city=JSON.parse(localStorage.getItem('savecity'));
-      // }
-      // console.log(data);
-      let {realtime}=data.value[0];
-      let {sendibleTemp,wD,wS,weather}=realtime;
-      const newData = {
-        key: 0,
-        city: city,
-        weather: weather,
-        temp: sendibleTemp +'℃',
-      };
-      this.setState({
-        dataSource: [newData]
-      });
-    })
+      getJsonp(city,true).then((data) => {
+        // if(JSON.parse(localStorage.getItem('savecity'))){
+        //   city=JSON.parse(localStorage.getItem('savecity'));
+        // }
+        let {realtime}=data.value[0];
+        let {sendibleTemp,wD,wS,weather}=realtime;
+        const newData = {
+          key: 0,
+          city: city,
+          weather: weather,
+          temp: sendibleTemp +'℃',
+        };
+        this.setState({
+          dataSource: [newData]
+        });
+      })
   }
 
   onDelete  (index,e) {
@@ -197,24 +192,14 @@ onEditEnter(e){
       val:e.target.value
     })
   }
-  selectCity(selectedRowKeys, selectedRows){
-    let {city}=selectedRows[0];
-    getJsonp(city,true).then((data) => {
-      localStorage.setItem('savecity',JSON.stringify(city));
-      localStorage.setItem('anotherData',JSON.stringify(data));
-      getJsonp(city).then((data) => {
-        localStorage.setItem('mainData',JSON.stringify(data));
-      })
-    })
-  }
   render() {
     const { dataSource,editing,val } = this.state;
-    const {textChange,handleAdd,onEditEnter,selectCity}=this;
+    const {textChange,handleAdd,onEditEnter}=this;
     const columns = this.columns;
     const {city,changeCity,selectKey}=this.props;
     return (
       <div>
-        <div className={editing?"add-container edit":"add-container"}>
+        <div className={editing?"add-container edit-city":"add-container"}>
         <Button className="editable-add-btn" onClick={handleAdd}>Add</Button>
         <Input size="large" placeholder="请输入城市名" className="addcity-input"
           value={val}

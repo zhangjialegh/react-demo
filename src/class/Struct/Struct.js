@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { Layout } from 'antd';
-// import './assets/style/index.css';
 import Head from '../Head/Head';
 import Body from '../Body/Body';
 import Foot from '../Foot/Foot';
@@ -17,7 +16,7 @@ class Struct extends React.Component{
   render(){
     const {city,changeCity,selectKey,outLoggedin}=this.props;
     return (
-          <Layout style={{height:'100vh'}}>
+          <Layout style={{height:'100vh',overflowY:'auto'}}>
             <Notification 
             city={city}
             />

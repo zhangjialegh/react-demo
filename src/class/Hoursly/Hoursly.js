@@ -1,7 +1,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Button,Spin,Card,Input,Row,Col,Table } from 'antd';
+import { Input,Row,Col,Table,message } from 'antd';
 import './Hoursly.less';
 import echarts from 'echarts';
 import getJsonp from '../../assets/script/getJsonp';
@@ -106,20 +106,15 @@ let backColor=`rgb(${Math.round(Math.random()*75+125)},${Math.round(Math.random(
         text: `${city}未来24小时气温变化(℃)`,
         textAlign:'center',
         left:'50%',
-        color:'#fff',
+        top:'2%',
     },
     tooltip: {
         trigger: 'axis'
     },
-    // legend: {
-    //     data:['气温'],
-    //     top:'8%',
-    // },
     toolbox: {
         show: true,
-        right:30,
-        top:10,
-        orient:'vertical',
+        right:'2%',
+        bottom:10,
         feature: {
             dataView: {readOnly: false},
             magicType: {type: ['line', 'bar']},
@@ -182,7 +177,10 @@ this.dailyTemp.resize();
 }
 
 updateEcharts(city){
-    if(city.trim()==='') return;
+    if(city.trim()==='') {
+      message.warning('The city name can not be empty!');
+      return;
+    };
     
     this.setState({
       val:''
@@ -249,22 +247,32 @@ textChange(e){
     let detailsInfos,date;
     return (
     <div style={{backgroundColor:''}}>
-     <div>
+     <Row>
+       <Col md={{span:6,offset:4}} sm={{span:8,offset:3}} xs={{span:20,offset:2}}>
         <Search
-        placeholder="input search text"
-        style={{ width: 200 }}
+        placeholder="input search city"
         value={val}
         onChange={textChange}
         onSearch={value => updateEcharts(value)}
+        style={{height:'34px',lineHeight:'34px'}}
         />
-     </div>
-     <div className="daily-temp" ref="dailytemp">
-
-     </div>
-     <div style={{backgroundColor:'#fff',borderRadius:'10px',margin:'0 5px'}}>
-          <h2 style={{textAlign:'center',padding:'10px 0'}}>24小时天气状况一览</h2>
-          <Table columns={this.columns} dataSource={tableData} size="middle" />
-    </div>
+        </Col>
+     </Row>
+     <Row type="flex" justify="center" align="center">
+       <Col md={16} sm={18} xs={24}>
+         <div className="daily-temp" ref="dailytemp">
+    
+         </div>
+       </Col>
+     </Row>
+     <Row type="flex" justify="center" align="center">
+       <Col md={16} sm={18} xs={24}>
+           <div style={{backgroundColor:'#fff',margin:'0 5px'}}>
+                <h2 style={{textAlign:'center',padding:'10px 0'}}>24小时天气状况一览</h2>
+                <Table columns={this.columns} dataSource={tableData} size="middle" />
+          </div>
+      </Col>
+    </Row>
     </div>
     );
   }
