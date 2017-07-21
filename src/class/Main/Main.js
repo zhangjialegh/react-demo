@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Card,Row,Col,Carousel,Input,Alert,Select } from 'antd';
+import { Card,Row,Col,Carousel,Select } from 'antd';
 import './Main.less';
 import echarts from 'echarts';
 import weatherCode from '../../assets/script/weatherCode';
@@ -53,7 +53,7 @@ class Main extends React.Component{
              no2Desc:'',
             },
     }
-    this.myChartTemp=null;
+    window.myChartTemp=null;
     this.optionTemp=null;
    this.handleChange=this.handleChange.bind(this);
    this.textChange=this.textChange.bind(this);
@@ -63,14 +63,14 @@ componentDidMount(){
   
     let {nowHM}=this.state;
     const {city}=this.props;
-    // if(localStorage.getItem('cityData')){
-    //     const localData=JSON.parse(localStorage.getItem('cityData'));
-    //       let {current,yesterday,forecastDaily,aqi,indices}=localData;
-    //       
-    //       this.createMoncharts(city,current,yesterday,forecastDaily,aqi,indices);
-    //       
-    //       return;
-    //      }
+    if(localStorage.getItem('cityData')){
+        const localData=JSON.parse(localStorage.getItem('cityData'));
+          let {current,yesterday,forecastDaily,aqi,indices}=localData;
+          
+          this.createMoncharts(city,current,yesterday,forecastDaily,aqi,indices);
+          
+          return;
+         }
          //-----------------------------------
           getJsonp(city).then((data) => {
            localStorage.setItem('cityData',JSON.stringify(data));
@@ -91,13 +91,6 @@ let nowHM=nowHms[0]+':'+nowHms[1];
 this.setState({
   nowHM,
 })
-// setInterval(() => {
-//   let nowHms=new Date().toTimeString().split(' ')[0].split(':');
-//   let nowHM=nowHms[0]+':'+nowHms[1];
-//   this.setState({
-//     nowHM,
-//   })
-// },30000)
 
 let nowWeatherImage=require(`../../assets/imgs/${weather}.png`);
 let nowWeatherInfo=weatherCode(weather);
@@ -177,13 +170,13 @@ this.optionTemp = {
         right:10,
         top:8,
             feature: {
-            dataView: {readOnly: false},
-            magicType: {type: ['line', 'bar']},
+            dataView: {show:true,readOnly: false},
+            magicType: {show:true,type: ['line', 'bar']},
         }
         },
+        calculable:true,
     xAxis:{
         type: 'category',
-        boundaryGap: false,
         data: foreDate,
     },
     yAxis: {
@@ -197,7 +190,7 @@ this.optionTemp = {
     series: [
         {
             name:'最高气温',
-            type:'line',
+            type:'bar',
             data:foreHtemp,
             markPoint: {
                 data: [
@@ -213,7 +206,7 @@ this.optionTemp = {
         },
         {
             name:'最低气温',
-            type:'line',
+            type:'bar',
             data:foreLtemp,
             markPoint: {
                 data: [
@@ -230,14 +223,15 @@ this.optionTemp = {
     ]
 };
 
-this.myChartTemp=echarts.init(this.refs.temp,{width:'auto',height:'auto'});
+window.myChartTemp=echarts.init(this.refs.temp);
 
 //  myChartAir.setOption(optionAir);
-  this.myChartTemp.setOption(this.optionTemp);
-  window.addEventListener('resize',() => {
-    this.myChartTemp.resize();
-  })
-this.myChartTemp.resize();
+  window.myChartTemp.setOption(this.optionTemp);
+  const echartResize = () => {
+    window.myChartTemp.resize();
+  };
+  window.addEventListener('resize',echartResize);
+   echartResize();
 }
 
 textChange(e){

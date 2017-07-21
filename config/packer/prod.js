@@ -8,9 +8,6 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const lessToJs = require('less-vars-to-js');
 const themeVariables=lessToJs(fs.readFileSync(path.resolve(__dirname, '../../src/assets/style/theme.less'), 'utf8'));
 
-
-
-
 const base = require('./base.js');
 
 module.exports = {
@@ -21,40 +18,56 @@ module.exports = {
   },
   output: {
     path: base.staticPath,
-    filename: 'assets/[name]_[hash:5].js',
+    filename: 'assets/script/[name]_[hash:5].js',
     publicPath: base.ProdPath
   },
   module: {
     rules: [
+      // {
+      //   test: /\.css$/,
+      //   include: base.srcPath,
+      //   use: ExtractTextPlugin.extract({
+      //     fallback: 'style-loader',
+      //     use: {loader: 'css-loader', options: {minimize: true, modules: true, localIdentName: '[name]__[local]__[hash:base64:5]'}}
+      //   })
+      // },
+      // {
+      //   test: /\.css$/,
+      //   include: base.libPath,
+      //   use: ExtractTextPlugin.extract({
+      //     fallback: 'style-loader',
+      //     use: {loader: 'css-loader', options: {modules: true}}
+      //   })
+      // },
+      // {
+      //   test: /\.less$/,
+      //   use: [
+      //     require.resolve('style-loader'),
+      //     require.resolve('css-loader'),
+      //     {
+      //       loader: require.resolve('less-loader'),
+      //       options: {
+      //         modifyVars:themeVariables,
+      //       },
+      //     },
+      //   ],
+      // },
       {
-        test: /\.css$/,
-        include: base.srcPath,
+        test: /\.(less|css)$/,
         use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: {loader: 'css-loader', options: {minimize: true, modules: true, localIdentName: '[name]__[local]__[hash:base64:5]'}}
-        })
-      },
-      {
-        test: /\.css$/,
-        include: base.libPath,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: {loader: 'css-loader', options: {modules: true}}
-        })
-      },
-      {
-        test: /\.less$/,
-        use: [
-          require.resolve('style-loader'),
-          require.resolve('css-loader'),
-          {
-            loader: require.resolve('less-loader'),
-            options: {
-              modifyVars:themeVariables,
-            },
+          use:[ 
+            require.resolve('css-loader'),
+            {
+              loader: require.resolve('less-loader'),
+          options: {
+            modifyVars:themeVariables,
           },
+         }
         ],
+          fallback: 'style-loader',
+        }),
       },
+    
       {
         test: /\.jsx?$/,
         include: base.srcPath,
@@ -66,7 +79,7 @@ module.exports = {
       },
       {
         test: /\.(png|jpg|jpeg|gif|woff|woff2|ttf|eot|svg|swf)$/,
-        use: {loader: 'file-loader', options: {name: 'assets/[name]_[sha512:hash:base64:7].[ext]'}}
+        use: {loader: 'file-loader', options: {name: 'assets/image/[name]_[sha512:hash:base64:7].[ext]'}}
       }
     ]
   },
@@ -85,8 +98,9 @@ module.exports = {
       title: 'Test App'
     }),
     new ExtractTextPlugin({
-      filename: 'assets/[name]_[hash].css',
-      allChunks: true
+      filename: 'assets/style/[name]_[hash:6].css',
+      disable:false,
+      allChunks: true,
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'common',

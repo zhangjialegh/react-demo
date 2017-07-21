@@ -10,8 +10,6 @@ import './Side.less';
 //   mode: PT.string,
 //   onCollapse: PT.func,
 // }
-
-
 class Side extends React.Component{
   constructor(props) {
     super(props)
@@ -70,6 +68,14 @@ class Side extends React.Component{
     this.setState({
       collapsed
     });
+    setTimeout(() =>{ 
+      
+      if(typeof myChartTemp==='object'){
+        myChartTemp.resize();
+      }else if(typeof dailyTemp==='object'){
+        window.dailyTemp.resize();
+      }
+    },200);
   }
     render(){
         let {collapsed,key}=this.state;

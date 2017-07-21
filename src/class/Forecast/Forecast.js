@@ -26,21 +26,12 @@ class Forecast extends React.Component{
 componentDidMount(){
   let {forecastDaily}=this.state;
   const {city}=this.props;
-  // if(localStorage.getItem('mainData')){
-  //     const localData=JSON.parse(localStorage.getItem('mainData'));
-  //       
-  //       if(JSON.parse(localStorage.getItem('savecity'))){
-  //         console.log('读取到本地数据了main');
-  //         city=JSON.parse(localStorage.getItem('savecity'));
-  //       }
-  //       console.log(localData);
-  //       let {forecastDaily}=localData;
-  //       this.set(city,forecastDaily);
-  //       
-  //       return;
-  //      }
-       
-  // if(city!=='')  return;
+  if(localStorage.getItem('cityData')){
+      const localData=JSON.parse(localStorage.getItem('cityData'));
+        let {forecastDaily}=localData;
+        this.set(city,forecastDaily);
+        return;
+       }
   getJsonp(city).then((data) => {
     let {forecastDaily}=data;
     this.set(city,forecastDaily);

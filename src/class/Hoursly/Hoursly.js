@@ -1,7 +1,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Input,Row,Col,Table,message } from 'antd';
+import { Input,Row,Col,Table,message,Icon } from 'antd';
 import './Hoursly.less';
 import echarts from 'echarts';
 import getJsonp from '../../assets/script/getJsonp';
@@ -20,7 +20,7 @@ class Hoursly extends React.Component{
      
    }
    this.option=null;
-   this.dailyTemp=null;
+   window.dailyTemp=null;
    this.textChange=this.textChange.bind(this);
    this.createEcharts=this.createEcharts.bind(this);
    this.updateEcharts=this.updateEcharts.bind(this);
@@ -30,8 +30,9 @@ class Hoursly extends React.Component{
             }, {
             title: '天气',        
             dataIndex: 'weather',
+            width:'30%',
             } ,{
-            title: '温度',
+            title: '温度(℃)',
             dataIndex: 'temperature',
             }, {
             title: '风向',
@@ -48,25 +49,17 @@ class Hoursly extends React.Component{
 componentDidMount(){
   let {forecastHourly}=this.state;
   const {city}=this.props;
-  // if(localStorage.getItem('mainData')){
-  //     const localData=JSON.parse(localStorage.getItem('mainData'));
-  //       
-  //       if(JSON.parse(localStorage.getItem('savecity'))){
-  //         console.log('读取到本地数据了main');
-  //         city=JSON.parse(localStorage.getItem('savecity'));
-  //       }
-  //       let {forecastHourly}=localData
-  //       this.createEcharts(city,forecastHourly);
-  //       return;
-  //      }
-       
-       
-//   if(city!=='')  return;
+  if(localStorage.getItem('cityData')){
+      const localData=JSON.parse(localStorage.getItem('cityData'));
+        let {forecastHourly}=localData;
+        
+        this.createEcharts(city,forecastHourly);
+        return;
+       }
   getJsonp(city).then((data) => {
-            
-             let {forecastHourly}=data
-             this.createEcharts(city,forecastHourly);
-  });
+    let {forecastHourly}=data;
+    this.createEcharts(city,forecastHourly);
+  })
 }
 
 createEcharts(city,forecastHourly){
@@ -77,6 +70,7 @@ createEcharts(city,forecastHourly){
           let temp=temperature.value[i],
               aqiN=aqi.value[i],
               weatherN=weather.value[i],
+              weatherV=weatherN,
               windd=wind.value[i].direction,
               winds=wind.value[i].speed,
               forecastTime=wind.value[i].datetime,
@@ -87,10 +81,11 @@ createEcharts(city,forecastHourly){
              forecastDate=forecastTime.split('T')[0].split('-')[2];
              time.push(forecastHour);
              tempData.push(temp);
+             
         tableData.push({
             key: i,
             time: forecastDate+'日'+forecastHour+'时',
-            weather: weatherN,
+            weather: <p><img src={require(`../../assets/imgs/${weatherV}.png`)} style={{height:40,width:40,verticalAlign:'middle',marginRight:'10%'}}/>{weatherN}</p>,
             temperature: temp,
             windpower: windd,
             windrating: winds,
@@ -98,9 +93,9 @@ createEcharts(city,forecastHourly){
         });
        });
     
-this.dailyTemp=echarts.init(document.querySelector('.daily-temp'),{padding:20});
+window.dailyTemp=echarts.init(document.querySelector('.daily-temp'),{padding:20});
 let backColor=`rgb(${Math.round(Math.random()*75+125)},${Math.round(Math.random()*75+125)},${Math.round(Math.random()*75+125)})`;
-  this.dailyTemp.setOption({
+  window.dailyTemp.setOption({
     backgroundColor:backColor,
     title: {
         text: `${city}未来24小时气温变化(℃)`,
@@ -149,12 +144,6 @@ let backColor=`rgb(${Math.round(Math.random()*75+125)},${Math.round(Math.random(
             name:'气温',
             type:'line',
             data:tempData,
-            // markPoint: {
-            //     data: [
-            //         {type: 'max', name: '最大值'},
-            //         {type: 'min', name: '最小值'}
-            //     ]
-            // },
             markLine: {
                 data: [
                     {type: 'average', name: '平均值'}
@@ -172,8 +161,8 @@ let backColor=`rgb(${Math.round(Math.random()*75+125)},${Math.round(Math.random(
 });
 
 this.setState({tableData});
-window.addEventListener('resize',() =>this.dailyTemp.resize());
-this.dailyTemp.resize();
+window.addEventListener('resize',() =>window.dailyTemp.resize());
+window.dailyTemp.resize();
 }
 
 updateEcharts(city){
@@ -194,10 +183,12 @@ getJsonp(city).then((data) => {
         let temp=temperature.value[i],
             aqiN=aqi.value[i],
             weatherN=weather.value[i],
+            weatherV=weatherN,
             windd=wind.value[i].direction,
             winds=wind.value[i].speed,
             forecastTime=wind.value[i].datetime,
             forecastHour,forecastDate;
+            
             weatherN=weatherCode(weatherN);
             windd=windSwitch(windd);
            forecastHour=forecastTime.split('T')[1].split(':')[0];
@@ -207,7 +198,7 @@ getJsonp(city).then((data) => {
       tableData.push({
           key: i,
           time: forecastDate+'日'+forecastHour+'时',
-          weather: weatherN,
+          weather: <p><img src={require(`../../assets/imgs/${weatherV}.png`)} style={{height:40,width:40,verticalAlign:'middle'}}/>  {weatherN}</p>,
           temperature: temp,
           windpower: windd,
           windrating: winds,
@@ -215,7 +206,7 @@ getJsonp(city).then((data) => {
       });
      });
      let backColor=`rgb(${Math.round(Math.random()*75+125)},${Math.round(Math.random()*75+125)},${Math.round(Math.random()*75+125)})`;
-        this.dailyTemp.setOption({
+        window.dailyTemp.setOption({
           backgroundColor:backColor,
             title: {
                    text: `${city}未来24小时气温变化(℃)`,
