@@ -45,20 +45,20 @@ class CreateJsonp {
     
     this.data = {};
     this.timeout = 10000;
-    this.cb = 'cb';
+    this.cb = 'callback';
     
     Object.assign(this, opt);
   }
   init(){
-    let {url, cb, timeout, data} = this;
+    let {url,timeout, data} = this;
     
     return Promise.resolve({
       then(resolve, reject){
         const script = document.createElement('script');
         
-        let callbackname = 'cb';
+        let callbackname = 'callback';
         
-        data[cb] = callbackname;
+        data['cb'] = callbackname;
         
         window[callbackname] = function (resule){
           resolve(resule);

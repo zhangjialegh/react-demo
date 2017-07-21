@@ -44,7 +44,7 @@ class RegistrationForm extends React.Component {
         this.setState({
           registConfirm:true
         })
-        history.push("/login",null);
+        history.replace("/login");
       }
     });
   }

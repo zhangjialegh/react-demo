@@ -10,12 +10,18 @@ class NormalLoginForm extends React.Component {
     super(props);
     this.handleSubmit=this.handleSubmit.bind(this);
   }
-  handleSubmit (e)  {
+  handleSubmit(e){
     e.preventDefault();
+    if(!localStorage.getItem('registInfo')){
+      message.info('首次使用的用户请先注册再登陆!');
+      return;
+    }
+    
     this.props.form.validateFields((err, values) => {
+      
       if (!err) {
         let {password,userName}=values;
-        const registInfo=JSON.parse(localStorage.getItem('registInfo'));
+        const registInfo=JSON.parse(localStorage.getItem('registInfo'))||[];
         let confirm=false;
         for(let item of registInfo){
           if(password===item.password&&userName===item.nickname){
@@ -29,8 +35,7 @@ class NormalLoginForm extends React.Component {
       }else{
         if(JSON.parse(localStorage.getItem('registInfo'))){
           message.info('用户名或密码不能为空!');
-        }else{
-          message.info('首次使用的用户请先注册再登陆!');
+          return;
         }
       }
     });
@@ -54,13 +59,7 @@ class NormalLoginForm extends React.Component {
           )}
         </FormItem>
         <FormItem>
-          {/* {getFieldDecorator('remember', {
-            valuePropName: 'checked',
-            initialValue: true,
-          })(
-            // <Checkbox>Remember me</Checkbox>
-          )} */}
-          {/* <a className="login-form-forgot" href="">Forgot password</a> */}
+    
           <Button type="primary" htmlType="submit" className="login-form-button">
             Log in
           </Button>

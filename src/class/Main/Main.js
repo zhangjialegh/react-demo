@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Card,Row,Col,Carousel,Select } from 'antd';
+import { Card,Row,Col,Carousel,Select,Icon } from 'antd';
 import './Main.less';
 import echarts from 'echarts';
 import weatherCode from '../../assets/script/weatherCode';
@@ -60,15 +60,12 @@ class Main extends React.Component{
    this.createMoncharts=this.createMoncharts.bind(this);
   }
 componentDidMount(){
-  
     let {nowHM}=this.state;
     const {city}=this.props;
     if(localStorage.getItem('cityData')){
         const localData=JSON.parse(localStorage.getItem('cityData'));
           let {current,yesterday,forecastDaily,aqi,indices}=localData;
-          
           this.createMoncharts(city,current,yesterday,forecastDaily,aqi,indices);
-          
           return;
          }
          //-----------------------------------
@@ -354,7 +351,7 @@ switch (optionV) {
             </Col>
             <Col md={10} sm={24}>
                 <Card className="search-card">
-                    <h2 style={{padding:10}}>{city}</h2>
+                    <h2 style={{padding:10}}>{city}<Icon type="environment-o" /></h2>
                     <Carousel autoplay dots={false} className="flash-box">
                     <div style={{backgroundImage:`url(${require('../../assets/imgs/a1.jpg')})`}}></div>
                     <div style={{backgroundImage:`url(${require('../../assets/imgs/a2.jpg')})`}}></div>
@@ -447,8 +444,6 @@ switch (optionV) {
                     </Card>
               </Col>
            </Row> */}
-
-         
     </div>
     );
   }
