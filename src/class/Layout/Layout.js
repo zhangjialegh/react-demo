@@ -1,6 +1,7 @@
 
 import { Layout } from 'antd';
 import './Layout.less';
+
 import Side from '../Side/Side';
 import Head from '../Head/Head';
 import Foot from '../Foot/Foot';
@@ -11,7 +12,6 @@ import Hoursly from '../Hoursly/Hoursly';
 import Lifenote from '../Lifenote/Lifenote';
 import Citymanage from '../Citymanage/Citymanage';
 import Todos from '../Todo/Todos';
-import Notfound from '../Notfound/Notfound';
 import Proceed from '../Proceed/Proceed';
 import {Route,Redirect,Switch} from 'react-router-dom';
 

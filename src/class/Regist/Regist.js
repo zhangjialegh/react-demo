@@ -1,11 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete,message } from 'antd';
+import { Form, Input, Tooltip, Icon, Select, Button, AutoComplete,message } from 'antd';
 import './Regist.less';
 const FormItem = Form.Item;
 const Option = Select.Option;
 const AutoCompleteOption = AutoComplete.Option;
-
 
 class RegistrationForm extends React.Component {
   constructor(props){
@@ -16,10 +14,7 @@ class RegistrationForm extends React.Component {
       autoCompleteResult: [],
     };
     this.handleSubmit=this.handleSubmit.bind(this);
-    // this.handleConfirmBlur=this.handleConfirmBlur.bind(this);
     this.checkPassword=this.checkPassword.bind(this);
-    // this.checkConfirm=this.checkConfirm.bind(this);
-    // this.handleWebsiteChange=this.handleWebsiteChange.bind(this);
   }
   
   handleSubmit (e)  {
@@ -32,10 +27,10 @@ class RegistrationForm extends React.Component {
         
         for(let item of registInfo){
           if(email===item.email){
-              message.info('The email had been registed!');
+              message.warning('The email had been registed!');
               return;
           }else if(nickname===item.nickname){
-              message.info('The nickname had been used!');
+              message.warning('The nickname had been used!');
               return;
           }
         }
@@ -48,10 +43,6 @@ class RegistrationForm extends React.Component {
       }
     });
   }
-  // handleConfirmBlur (e)  {
-  //   const value = e.target.value;
-  //   this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-  // }
   checkPassword (rule, value, callback)  {
     const form = this.props.form;
     if (value && value !== form.getFieldValue('password')) {
@@ -60,24 +51,6 @@ class RegistrationForm extends React.Component {
       callback();
     }
   }
-  // checkConfirm (rule, value, callback)  {
-  //   const form = this.props.form;
-  //   if (value && this.state.confirmDirty) {
-  //     form.validateFields(['confirm'], { force: true });
-  //   }
-  //   callback();
-  // }
-  // 
-  // handleWebsiteChange (value)  {
-  //   let autoCompleteResult;
-  //   if (!value) {
-  //     autoCompleteResult = [];
-  //   } else {
-  //     autoCompleteResult = ['.com', '.org', '.net'].map(domain => `${value}${domain}`);
-  //   }
-  //   this.setState({ autoCompleteResult });
-  // }
-
   render() {
     const { getFieldDecorator } = this.props.form;
     const { autoCompleteResult} = this.state;

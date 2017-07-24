@@ -1,12 +1,15 @@
 
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { Input,Row,Col,Table,message,Icon } from 'antd';
+import { Input,Row,Col,Table,message } from 'antd';
 import './Hoursly.less';
-import echarts from 'echarts';
-import getJsonp from '../../assets/script/getJsonp';
-import windSwitch from '../../assets/script/windSwitch';
-import weatherCode from '../../assets/script/weatherCode';
+import  {getJsonp,weatherCode,windSwitch,cityIds} from '../../assets/script/base.js';
+const echarts = require('echarts/lib/echarts');
+require('echarts/lib/chart/line');
+require('echarts/lib/component/tooltip');
+require('echarts/lib/component/title');
+require('echarts/lib/component/toolbox');
+
+
 const Search = Input.Search;
 
 class Hoursly extends React.Component{
@@ -93,7 +96,7 @@ createEcharts(city,forecastHourly){
         });
        });
     
-window.dailyTemp=echarts.init(document.querySelector('.daily-temp'),{padding:20});
+window.dailyTemp=echarts.init(document.querySelector('.daily-temp'));
 let backColor=`rgb(${Math.round(Math.random()*75+125)},${Math.round(Math.random()*75+125)},${Math.round(Math.random()*75+125)})`;
   window.dailyTemp.setOption({
     backgroundColor:backColor,
@@ -115,7 +118,6 @@ let backColor=`rgb(${Math.round(Math.random()*75+125)},${Math.round(Math.random(
             magicType: {type: ['line', 'bar']},
         }
     },
-    // calculable: true, 
     xAxis:  {
         type: 'category',
         boundaryGap: true,
@@ -125,7 +127,6 @@ let backColor=`rgb(${Math.round(Math.random()*75+125)},${Math.round(Math.random(
             show:false
         }
     },
-    // dataZoom:{show:true}, 
     yAxis: {
         min:'dataMin',
         max:'dataMax',
@@ -139,7 +140,6 @@ let backColor=`rgb(${Math.round(Math.random()*75+125)},${Math.round(Math.random(
         }
     },
     series: [
-        
         {
             name:'气温',
             type:'line',
@@ -166,15 +166,35 @@ window.dailyTemp.resize();
 }
 
 updateEcharts(city){
-    if(city.trim()==='') {
+  
+  city=city.trim();
+    if(city ==='') {
       message.warning('The city name can not be empty!');
       return;
     };
     
-    this.setState({
-      val:''
+    let flag=false,cityid;
+    
+    cityIds.forEach((item,i) => {
+      let {countyname,areaid}=item;
+      if(city===countyname){
+       cityid=areaid;
+       flag=true;
+      }
     })
-getJsonp(city).then((data) => {
+ 
+ if(!flag) {
+   message.warning('The city is invalid!');
+   return;
+ }
+   
+    
+ this.setState({
+   val:''
+ })
+    
+    
+getJsonp(cityid).then((data) => {
   let {forecastHourly}=data;
   let {aqi,temperature,weather,wind}=forecastHourly;
   let time=[],tempData=[],tableData=[];

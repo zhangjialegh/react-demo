@@ -1,7 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { Layout,Menu,Icon,Breadcrumb } from 'antd';
-import {BrowserRouter as Router,Route,Link} from 'react-router-dom';
+import { Layout,Menu,Icon } from 'antd';
+import {Link} from 'react-router-dom';
 const {Sider}=Layout;
 const SubMenu=Menu.SubMenu;
 import './Side.less';

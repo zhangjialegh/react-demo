@@ -1,10 +1,8 @@
 
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { Card,Input,Row,Col,Switch } from 'antd';
+import { Row,Col,Switch } from 'antd';
 import './Lifenote.less';
-import getJsonp from '../../assets/script/getJsonp';
-
+import  {getJsonp,weatherCode,windSwitch} from '../../assets/script/base.js';
 class Lifenote extends React.Component{
     constructor(props) {
         super(props);

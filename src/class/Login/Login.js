@@ -1,6 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { Form, Icon, Input, Button, Checkbox,message } from 'antd';
+import { Form, Icon, Input, Button, message } from 'antd';
 import './Login.less';
 import {Link} from 'react-router-dom';
 const FormItem = Form.Item;
@@ -30,11 +29,11 @@ class NormalLoginForm extends React.Component {
           }
         }
         if(!confirm){
-          message.info('用户名或密码错误,请重新输入!');
+          message.error('用户名或密码错误,请重新输入!');
         }
       }else{
         if(JSON.parse(localStorage.getItem('registInfo'))){
-          message.info('用户名或密码不能为空!');
+          message.warning('用户名或密码不能为空!');
           return;
         }
       }

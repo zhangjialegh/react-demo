@@ -1,11 +1,14 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Card,Row,Col,Carousel,Select,Icon } from 'antd';
 import './Main.less';
-import echarts from 'echarts';
-import weatherCode from '../../assets/script/weatherCode';
-import windSwitch from '../../assets/script/windSwitch';
-import getJsonp from '../../assets/script/getJsonp';
+import  {getJsonp,weatherCode,windSwitch} from '../../assets/script/base.js';
+const echarts = require('echarts/lib/echarts');
+require('echarts/lib/chart/bar');
+require('echarts/lib/component/tooltip');
+require('echarts/lib/component/title');
+require('echarts/lib/component/toolbox');
+require('echarts/lib/component/legend');
+
 
 const Option = Select.Option;
 class Main extends React.Component{
@@ -171,7 +174,6 @@ this.optionTemp = {
             magicType: {show:true,type: ['line', 'bar']},
         }
         },
-        calculable:true,
     xAxis:{
         type: 'category',
         data: foreDate,
@@ -180,21 +182,18 @@ this.optionTemp = {
         type: 'value',
         min:'dataMin',
         left:5,
-        axisLabel: {
-            formatter: '{value} °C'
-        }
     },
     series: [
         {
             name:'最高气温',
             type:'bar',
             data:foreHtemp,
-            markPoint: {
-                data: [
-                    {type: 'max', name: '最大值'},
-                    {type: 'min', name: '最小值'}
-                ]
-            },
+            // markPoint: {
+            //     data: [
+            //         {type: 'max', name: '最大值'},
+            //         {type: 'min', name: '最小值'}
+            //     ]
+            // },
             markLine: {
                 data: [
                     {type: 'average', name: '平均值'}

@@ -4,7 +4,6 @@ const fs=require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackNotifier = require('webpack-notifier');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const lessToJs = require('less-vars-to-js');
 const themeVariables=lessToJs(fs.readFileSync(path.resolve(__dirname, '../../src/assets/style/theme.less'), 'utf8'));
 
@@ -56,12 +55,17 @@ module.exports = {
         test: /\.(less|css)$/,
         use: ExtractTextPlugin.extract({
           use:[ 
-            require.resolve('css-loader'),
+            {
+              loader:require.resolve('css-loader'),
+               options: {
+                 minimize: true, 
+              }
+            },
             {
               loader: require.resolve('less-loader'),
-          options: {
-            modifyVars:themeVariables,
-          },
+              options: {
+                modifyVars:themeVariables,
+              }
          }
         ],
           fallback: 'style-loader',
@@ -91,11 +95,20 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env':{'NODE_ENV': JSON.stringify('production')}
     }),
-    new UglifyJSPlugin(),
+    new webpack.optimize.UglifyJsPlugin(
+      {
+          output:{
+            comments:false,
+          },
+          compress:{
+            warnings:false,
+          }
+    }
+    ),
     new HtmlWebpackPlugin({
       template: './src/index.html',
       filename: 'index.html',
-      title: 'Test App'
+      title: 'The weather'
     }),
     new ExtractTextPlugin({
       filename: 'assets/style/[name]_[hash:6].css',

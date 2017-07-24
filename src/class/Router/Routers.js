@@ -1,6 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-
 import '../../assets/style/index.less';
 import Layouter from '../Layout/Layout';
 import Regist from '../Regist/Regist';

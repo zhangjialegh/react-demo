@@ -1,12 +1,8 @@
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Spin,Card,Row,Col,Modal } from 'antd';
 import './Forecast.less';
-import echarts from 'echarts';
-import getJsonp from '../../assets/script/getJsonp';
-import windSwitch from '../../assets/script/windSwitch';
-import weatherCode from '../../assets/script/weatherCode';
+import  {getJsonp,weatherCode,windSwitch} from '../../assets/script/base.js';
 import QueueAnim from 'rc-queue-anim';
 
 class Forecast extends React.Component{

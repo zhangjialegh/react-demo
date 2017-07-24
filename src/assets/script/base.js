@@ -1,4 +1,5 @@
-let cityIds=[
+
+const cityIds=[
   {
     "areaid": 101010100,
     "countyname": "北京"
@@ -10267,6 +10268,276 @@ let cityIds=[
     "areaid": 101340406,
     "countyname": "云林"
   }
-]
+];
 
-export default cityIds;
+/**
+ * 用来请求后端数据的js脚本文件
+ * 作者：
+ * 日期：
+ * 版本：1.0
+ */
+
+
+function getJsonp(city,flag,timeout) {
+  if(Number(city)===Number(city)){
+  }else{
+    cityIds.forEach((item,i) => {
+      let {countyname,areaid}=item;
+      if(city===countyname){
+       city=areaid;
+      }
+    })
+  }
+  
+let url=`https://weatherapi.market.xiaomi.com/wtr-v3/weather/all?latitude=110&longitude=112&locationKey=weathercn%3A${city}&days=7&appKey=weather20151024&sign=zUFJoAR2ZVrDy1vF3D07&isGlobal=false&locale=zh_cn`;
+
+if(flag){
+  url=`http://aider.meizu.com/app/weather/listWeather?cityIds=${city}`;
+}
+
+            url = encodeURIComponent(url);
+            return fetch({
+                    url: 'http://wehiking.com/jsonp.php',
+                    data: {
+                        'src':url,
+                    },
+                    cb:"cb",
+                    timeout: 3000
+                }).init();
+        };
+
+        
+function fetch(opt){
+    return new CreateJsonp(opt);
+}
+class CreateJsonp {
+  constructor(opt){
+    if(!opt.url){
+      throw new Error('The argument\'s object must be include url.');
+    }
+    
+    this.data = {};
+    this.timeout = 10000;
+    this.cb = 'callback';
+    
+    Object.assign(this, opt);
+  }
+  init(){
+    let {url,timeout, data} = this;
+    
+    return Promise.resolve({
+      then(resolve, reject){
+        const script = document.createElement('script');
+        
+        let callbackname = 'callback';
+        
+        data['cb'] = callbackname;
+        
+        window[callbackname] = function (resule){
+          resolve(resule);
+          clearTimeout(script.timer);
+          window[callbackname] = null;
+          document.body.removeChild(script);
+        };
+        url += '?' + formatData(data);
+        
+        // 发送请求
+        script.setAttribute('src', url);
+        document.body.appendChild(script);
+
+        script.timer = setTimeout(function() {
+          window[callbackname] = null;
+          document.body.removeChild(script);
+          reject(new Error(`The request is error!`));
+        }, timeout);
+        
+      }
+    });
+  }
+}
+
+function formatData(data){
+  let query = [];
+  for(let key in data){
+    query.push(key + '=' + data[key]);
+  }
+  return query.join('&');
+}
+
+
+const weatherInfo =[
+  {
+    "code": 0,
+    "wea": "晴"
+  },
+  {
+    "code": 1,
+    "wea": "多云"
+  },
+  {
+    "code": 2,
+    "wea": "阴"
+  },
+  {
+    "code": 3,
+    "wea": "阵雨"
+  },
+  {
+    "code": 4,
+    "wea": "雷阵雨"
+  },
+  {
+    "code": 5,
+    "wea": "雷阵雨并伴有冰雹"
+  },
+  {
+    "code": 6,
+    "wea": "雨夹雪"
+  },
+  {
+    "code": 7,
+    "wea": "小雨"
+  },
+  {
+    "code": 8,
+    "wea": "中雨"
+  },
+  {
+    "code": 9,
+    "wea": "大雨"
+  },
+  {
+    "code": 10,
+    "wea": "暴雨"
+  },
+  {
+    "code": 11,
+    "wea": "大暴雨"
+  },
+  {
+    "code": 12,
+    "wea": "特大暴雨"
+  },
+  {
+    "code": 13,
+    "wea": "阵雪"
+  },
+  {
+    "code": 14,
+    "wea": "小雪"
+  },
+  {
+    "code": 15,
+    "wea": "中雪"
+  },
+  {
+    "code": 16,
+    "wea": "大雪"
+  },
+  {
+    "code": 17,
+    "wea": "暴雪"
+  },
+  {
+    "code": 18,
+    "wea": "雾"
+  },
+  {
+    "code": 19,
+    "wea": "冻雨"
+  },
+  {
+    "code": 20,
+    "wea": "沙尘暴"
+  },
+  {
+    "code": 21,
+    "wea": "小雨-中雨"
+  },
+  {
+    "code": 22,
+    "wea": "中雨-大雨"
+  },
+  {
+    "code": 23,
+    "wea": "大雨-暴雨"
+  },
+  {
+    "code": 24,
+    "wea": "暴雨-大暴雨"
+  },
+  {
+    "code": 25,
+    "wea": "大暴雨-特大暴雨"
+  },
+  {
+    "code": 26,
+    "wea": "小雪-中雪"
+  },
+  {
+    "code": 27,
+    "wea": "中雪-大雪"
+  },
+  {
+    "code": 28,
+    "wea": "大雪-暴雪"
+  },
+  {
+    "code": 29,
+    "wea": "浮沉"
+  },
+  {
+    "code": 30,
+    "wea": "扬沙"
+  },
+  {
+    "code": 31,
+    "wea": "强沙尘暴"
+  },
+  {
+    "code": 32,
+    "wea": "飑"
+  },
+  {
+    "code": 33,
+    "wea": "龙卷风"
+  },
+  {
+    "code": 34,
+    "wea": "若高吹雪"
+  },
+  {
+    "code": 35,
+    "wea": "轻雾"
+  },
+  {
+    "code": 53,
+    "wea": "霾"
+  },
+  {
+    "code": 99,
+    "wea": "未知"
+  }
+];
+function weatherCode(weatherCode) {
+  weatherInfo.forEach((item) => {
+    if(weatherCode==item.code){
+      weatherCode=item.wea;
+    }
+  });
+  
+  return weatherCode;
+};
+function windSwitch (windd) {
+  const typeArr=['北风','东北风','东风','东南风','南风','西南风','西风','西北风','北风'];
+  return typeArr[Math.round(windd/45)];
+};
+//--------------------------------------------------------------
+
+
+export {
+  getJsonp,
+  weatherCode,
+  windSwitch,
+  cityIds
+}

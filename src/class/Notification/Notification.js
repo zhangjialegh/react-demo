@@ -1,9 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { notification } from 'antd';
 import './Notification.less';
-import getJsonp from '../../assets/script/getJsonp';
-
+import  {getJsonp,weatherCode,windSwitch} from '../../assets/script/base.js';
 class Notification extends React.Component {
   constructor(props){
     super(props)

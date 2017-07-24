@@ -1,9 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { Table, Input, Icon, Button, Popconfirm,message } from 'antd';
+import { Table, Input, Button, Popconfirm,message } from 'antd';
 import './Citymanage.less';
-import getJsonp from '../../assets/script/getJsonp.js';
-import weatherCode from '../../assets/script/weatherCode.js';
+import  {getJsonp,cityIds} from '../../assets/script/base.js';
 
 class EditableCell extends React.Component {
   constructor(props){
@@ -158,14 +156,42 @@ onEditEnter(e){
     return;
   }
   if(e.keyCode !== 13) return;
-  const { val,dataSource,editing } = this.state;
-   if(val===''){
+  
+  let { val,dataSource,editing } = this.state;
+    val=val.trim();
+   if(val ===''){
      message.warning('The name of city can not be empty!');
      return;
    }
-   
+   if(val===this.props.city){
+     message.warning('The city is existent!');
+     return;
+   }
+   if(localStorage.getItem('dataSource')){
+     const dataSource=JSON.parse(localStorage.getItem('dataSource'));
+     
+     for(let item of dataSource){
+       if(val===item.city){
+         message.warning('The city is existent!');
+         return;
+       }
+     }
+   }
+   let flag=false,cityid;
+   cityIds.forEach((item,i) => {
+     let {countyname,areaid}=item;
+     if(val===countyname){
+      cityid=areaid;
+      flag=true;
+     }
+   })
+
+if(!flag) {
+  message.warning('The city is invalid!');
+  return;
+}
   
-  getJsonp(val,true).then((data) => {
+  getJsonp(cityid,true).then((data) => {
     let {realtime}=data.value[0];
     let {sendibleTemp,wD,wS,weather}=realtime;
     const newData = {
