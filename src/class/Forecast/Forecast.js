@@ -15,8 +15,6 @@ class Forecast extends React.Component{
    
    this.set=this.set.bind(this);
    this.showModal=this.showModal.bind(this);
-  //  this.handleChange=this.handleChange.bind(this);
-  //  this.textChange=this.textChange.bind(this);
   }
 
 componentDidMount(){
@@ -36,19 +34,6 @@ componentDidMount(){
 set(city,forecastDaily){
 this.setState({cityName:city,forecastDaily})
 }
-// textChange(e){
-//   this.setState({
-//     cityName:e.target.value
-//   })
-// }
-// handleChange(value) {
-//   value=value.trim().toLowerCase();
-//   getJsonp(value).then((data)=> {
-//                             let {forecastDaily}=data;
-//                             this.set(value,forecastDaily);
-//                           });
-//   //  this.setState({city:''})                         
-// }
    showModal(e){
      const clickDate=e.target.innerHTML;
      const cityData=JSON.parse(localStorage.getItem('cityData'));
@@ -98,15 +83,10 @@ this.setState({cityName:city,forecastDaily})
   render(){
     let {set,handleChange,textChange,showModal}=this;
     let {cityName,forecastDaily}=this.state;
-    // let cards,code,txt,time=new Date().getHours();
     let cards,timeNow=new Date().getHours(),weatherV,windd,winds,weatherI,forecastDate;
     if(forecastDaily!==''){
-      // console.log(basic,daily_forecast);
       let {aqi,sunRiseSet,temperature,weather,wind}=forecastDaily;
-  
        cards=temperature.value.slice(1,7).map((item,i) => {
-        // let {date,img,wd,weather,week,ws,temp_day_c,temp_night_c,sun_down_time,sun_rise_time}=item;
-        
         let tempH=temperature.value[i].from,
             tempL=temperature.value[i].to,
             aqiV=aqi.value[i],
@@ -135,7 +115,7 @@ this.setState({cityName:city,forecastDaily})
         let bkColor=`rgb(${Math.round(Math.random()*75+125)},${Math.round(Math.random()*75+125)},${Math.round(Math.random()*75+125)})`;
         forecastDate=sunRiseSet.value[i].from.split('T')[0].split('-')[2];
         return (
-                  <Col key={i} md={7} sm={7} xs={18} style={{margin:'0 0 10px 0'}}
+                  <Col key={i} md={7} sm={10} xs={18} style={{margin:'0 0 10px 0'}}
                     
                     >
                     <Card style={{background:bkColor,borderRadius:'10px'}}
