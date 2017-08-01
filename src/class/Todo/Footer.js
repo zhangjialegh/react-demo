@@ -32,7 +32,8 @@ const Footer =function (props) {
         </span>
         <ul className="filters">
           <li>
-            <a href="#/"
+            <a 
+              href="#/todo"
               className={view === 'all' ? 'selected' : ''}
               onClick={() => {
                 changeView('all')
@@ -40,7 +41,8 @@ const Footer =function (props) {
             >All</a>
           </li>
           <li>
-            <a href="#/active"
+            <a 
+              href="#/todo/active"
               className={view === 'active' ? 'selected' : ''}
               onClick={() => {
                 changeView('active')
@@ -48,7 +50,8 @@ const Footer =function (props) {
             >Active</a>
           </li>
           <li>
-            <a href="#/completed"
+            <a 
+              href="#/todo/completed"
               className={view === 'completed' ? 'selected' : ''}
               onClick={() => {
                 changeView('completed')

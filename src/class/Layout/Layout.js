@@ -48,7 +48,7 @@ class Layouter extends React.Component{
             outLoggedin={outLoggedin}
             />
             <Content style={{margin:'10px 16px',position:'relative'}}>
-              <Switch>
+               <Switch> 
                 <Route path="/main" render={() =><Main city={city} />}></Route> 
                 <Route path="/forecast" render={() =><Forecast city={city} />}></Route>
                 <Route path="/hoursly" render={() =><Hoursly city={city} />}></Route>
@@ -57,7 +57,7 @@ class Layouter extends React.Component{
                 <Route path="/todo" render={() =><Todos updateTodos={updateTodos}/>}></Route>
                 <Route path="/proceed" render={() => <Proceed todos={todos}/>}/>
                 <Redirect from={`${this.props.match.url}`} to="/404" />
-              </Switch>
+               </Switch> 
            </Content>
             {/* <Foot /> */}
           </Layout>
